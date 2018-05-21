@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm, change,FieldArray } from 'redux-form';
-import {CardFooter, Label,Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import {ListGroup,CardFooter, Label,Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import {inputField} from '../components/field'
@@ -24,23 +24,11 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
       {submitFailed && error && <span>{error}</span>}
     </Col>
     </FormGroup>
-
-   {/*  <FormGroup row>
-                    <Col md="12">
-                      <InputGroup>
-                        <Input type="email" id="input2-group2" name="input2-group2" placeholder="Email" />
-                        <InputGroupAddon addonType="append">
-                          <Button type="button" color="primary">Submit</Button>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </Col>
-                  </FormGroup> */}
-
-
     {fields.map((member, index) => (
-       <FormGroup row key={index}>   
+      <ListGroup>   
          <Col md="1"/>
       <Col md="11">
+      
       <InputGroup>
         <Field
           name={`${member}.id`}
@@ -66,7 +54,7 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
         </InputGroupAddon>
                       </InputGroup>
       </Col>
-      </FormGroup>
+      </ListGroup>
     ))}
   </div>
 )

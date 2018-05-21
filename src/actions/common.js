@@ -115,7 +115,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     console.log(getUrl)
     ////////////////////////////////
     //以下部分为测试数据用，API调整好后请删除
-    /* let sample = {
+    let sample = {
         "content": [
             {
                 "id":"195884804934228449",
@@ -165,7 +165,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
         "first": true,
         "numberOfElements": 2
     }
-    return dispatch(getListResult(sample)) */
+    return dispatch(getListResult(sample))
       //以上部分为测试数据用，API调整好后请删除
     ////////////////////////////////
     return fetch(getUrl, args).then(response => response.json())

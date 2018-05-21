@@ -115,7 +115,7 @@ class Project extends Component {
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-edit fa-lg mt-4"
+      <a className="fa fa-edit" style={{fontSize:20,color:'blue',alignItems:'top'}}
         onClick={
           (e) => {
             //e.stopPropagation()
@@ -124,7 +124,8 @@ class Project extends Component {
           }
         }>
       </a>
-      <a className="fa fa-trash-o fa-lg mt-4"
+      &nbsp;
+      <a className="fa fa-trash-o" style={{fontSize:20,color:'red',alignItems:'top'}}
         onClick={
           e => {
             // e.stopPropagation()
