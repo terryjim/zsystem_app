@@ -37,7 +37,16 @@ class RoomEditableTable extends React.Component {
           data={data}
           columns={[
             {
-              Header: '',
+              Header: <a className="fa fa-plus" style={{fontSize:20,color:'blue',alignItems:'top'}}
+                  onClick={
+                    e => { /* const data = [...this.state.data]; */
+                    /*   data[c.index]= e.target.innerHTML; */
+                      
+                      data.splice(data.length,0,{floor:'',room:''})
+                      this.setState({ data });
+                    }
+                  }>
+                </a>,
               sortable: false,
               width: 30,
               filterable: false,
@@ -46,6 +55,7 @@ class RoomEditableTable extends React.Component {
                   onClick={
                     e => { /* const data = [...this.state.data]; */
                     /*   data[c.index]= e.target.innerHTML; */
+                    
                       data.splice(c.index,1)
                       this.setState({ data });
                     }
@@ -64,7 +74,10 @@ class RoomEditableTable extends React.Component {
               sortable:false
             }
           ]}
-          defaultPageSize={data.length}
+          resizable={false}
+          minRows={1}          
+          defaultPageSize={999}
+          noDataText='无数据'
           className="-striped -highlight"
         />
         <br />
