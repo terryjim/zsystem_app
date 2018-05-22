@@ -2,6 +2,7 @@ const defaultUrl = "http://localhost/"
 //const defaultUrl = "http://192.168.3.153/"
 const TParams = {
     defaultUrl,
+    defaultPageSize:20,
     urls: {
         /* get_project_list: defaultUrl + 'project/getByPage',
         save_project: defaultUrl + 'project/save',

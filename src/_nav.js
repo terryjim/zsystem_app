@@ -13,16 +13,21 @@ export default {
   
 
     {
-     // title: true,
+      title: true,
       name: '楼盘管理',
+      wrapper: {            // optional wrapper object
+        element: '楼盘管理',        // required valid HTML5 element tag
+        attributes: {style: {fontSize: 15,color:"#8bc34a"}}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      },
       //url: '/base',
-      icon: 'icon-globe',
+     // icon: 'icon-globe',
       /* wrapper: {            // optional wrapper object
         element: '',        // required valid HTML5 element tag
         attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       class: '' ,  */           // optional class names space delimited list for title item ex: "text-center"
-      children: [
+      //class: 'h3' 
+    },  
         {
           name: '楼盘设置',
           url: '/project/project',
@@ -32,21 +37,24 @@ export default {
           name: '楼栋设置',
           url: '/project/building',
           icon: 'icon-chart',
-        }
-      ]
-    },
-   
+        }     
+   ,
+  
     {
-      //title: true,
+      title: true,
       name: '物业公司管理',
+      wrapper: {            // optional wrapper object
+        element: '物业公司管理',        // required valid HTML5 element tag
+        attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      },
       //url:'/theme',
       /* wrapper: {            // optional wrapper object
         element: '',        // required valid HTML5 element tag
         attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       }, */
-      icon: 'icon-energy',
-      class: '',             // optional class names space delimited list for title item ex: "text-center"
-    children:[
+     // icon: 'icon-energy',
+      //class: '',             // optional class names space delimited list for title item ex: "text-center"
+    },
       {
         name: '物业公司设置',
         url: '/property/setting',
@@ -61,8 +69,7 @@ export default {
         url: '/property/allot',
         icon: 'icon-equalizer',
       },
-    ]
-    },
+    
     
     {
       title: true,

@@ -1,169 +1,202 @@
 import React, { Component } from 'react';
-import { Field, reduxForm, change } from 'redux-form';
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Field, reduxForm, change,FieldArray } from 'redux-form';
+import {ListGroup,CardFooter, Label,Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import {inputField} from '../components/field'
-import Cities from '../components/Cities'
-import DropzoneComponent from 'react-dropzone-component'
-import 'react-dropzone-component/styles/filepicker.css'
-import 'dropzone/dist/min/dropzone.min.css'
-
-
-const componentConfig = {
-  // iconFiletypes: ['.jpg', '.png', '.gif'],
-  showFiletypeIcon: true,
-  postUrl: 'http://bluechips.oss-cn-hangzhou.aliyuncs.com',
-
-}
-
-let uploadFiles = "" //上传文件列表
+import {InputField,SelectField,InlineField} from '../components/field'
+import RoomEditableTable from '../components/RoomEditableTable.js'
+const simpleField = ({readOnly,input, label, type, meta: { touched, error } }) => (            
+  <Input type={type} invalid={touched && error?true:false} valid={touched && !error?true:false} id="name" placeholder={label} {...input} readOnly={readOnly}/> 
+)
+const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
+  <div>
+    <FormGroup row>
+                    <Col md="9">
+                      <Label>&nbsp;&nbsp;&nbsp;&nbsp;公共区域</Label>
+                    </Col>
+                    <Col md="3">    
+      <Button block color="primary" hidden={readOnly} onClick={() => fields.push({})}>
+        添加
+      </Button>
+      {submitFailed && error && <span>{error}</span>}
+    </Col>
+    </FormGroup>
+    {fields.map((member, index) => (
+      <ListGroup>   
+         <Col md="1"/>
+      <Col md="11">
+      
+      <InputGroup>
+        <Field
+          name={`${member}.id`}
+          type="hidden"
+          component={InputField}
+          readOnly={readOnly}
+          label={null}
+        />
+        {/* <Label>名称</Label> */}
+       {/*  </Col>
+        <Col md="12"> */}
+        <Field
+          name={`${member}.name`}
+          type="text"
+          label={null}
+          readOnly={readOnly}
+          component={simpleField}         
+        />
+        <InputGroupAddon addonType="append">
+        <Button color="danger"  hidden={readOnly}
+          onClick={() => fields.remove(index)}
+        >删除</Button>
+        </InputGroupAddon>
+                      </InputGroup>
+      </Col>
+      </ListGroup>
+    ))}
+  </div>
+)
 const validate = values => {
   const errors = {}
-  if (!values.loginName) {
-    errors.loginName = '登录名不能为空'
+  if (!values.name) {
+    errors.name = '楼盘名称不能为空'
   }
-  if (!values.realName) {
-    errors.realName = '用户名不能为空'
-  }
-  if (values.uploading) {
-    errors.uploading_oss_flag = '文件正在上传中，请稍后再试或取消文件上传'
-  }
+  if (!values.category) {
+    errors.category = '楼盘类型不能为空'
+  }  
   return errors
 }
 
-const warn = values => {
-  const warnings = {}
-  /*  if (values.loginName.length() >10) {
-     warnings.loginName = '你年龄还有点小哦！'
-   } */
-  return warnings
-}
 let EditBuildingForm = props => {
-  const {readOnly=false, values, dispatch, error, handleSubmit, pristine, reset, submitting, oss} = props;
+  const {readOnly=false, values, dispatch, error, handleSubmit, pristine, reset, submitting,closeForm,initialValues} = props;
  
-  const djsConfig = {
-    addRemoveLinks: true,
-    //uploadMultiple:false,
-    method: "post",
-    //paramName:"multipartFiles",
-    //acceptedFiles: "image/jpeg,image/png,image/gif",
-    params: {
-      "key": oss.dir + "${filename}", ...oss
-    }
-  }
-  /*  "accessid": oss.accessid,
-   "OSSAccessKeyId": oss.OSSAccessKeyId,
-   "policy": oss.policy,
-   "signature":oss.signature,
-   "dir": oss.dir,
-   "host": oss.host,
-   "expire": oss.expire */
-  let eventHandlers = {
-    //init: ()=>alert('init'),
-    // All of these receive the event as first parameter:
-    //drop: ()=>alert('drop'),
-    //dragstart: ()=>alert('dragstart'),
-    //dragend: ()=>alert('dragend'),
-    //dragenter: ()=>alert('dragenter'),
-    //dragover: ()=>alert('dragover'),
-    //dragleave:()=>alert('dragleave'),
-    // All of these receive the file as first parameter:
-    //addedfile: () => uploading = true,
-    addedfile: (file) => {
-      /*  if (uploadFiles === ''){
-         uploadFiles = file.name
-       }
-       else
-         uploadFiles += ',' + file.name   
-         dispatch(change('building', 'files', uploadFiles)) */
-
-      // values.files=uploadFiles
-      // EditBuildingForm.validate(EditBuildingForm.values)
-    },
-    removedfile: (file) => {
-      if (uploadFiles.length > 0) {
-        let tempFiles = uploadFiles.split(',')
-        let index = tempFiles.indexOf(file.name)
-        if (index > -1) {
-          tempFiles.splice(index, 1)
-          uploadFiles = tempFiles.join(',')
-          dispatch(change('building', 'files', uploadFiles))
-        }
-      }
-    } ,
-    //thumbnail: () => alert('thumbnail'),
-    error: () => alert('文件上传失败'),
-    //processing: () => alert('processing'),
-    // uploadprogress: ()=>alert('uploadprogress'),  
-    success: (file) => {
-      uploadFiles === '' ? uploadFiles = file.name : uploadFiles += ',' + file.name
-      dispatch(change('building', 'files', uploadFiles))
-    },
-    complete: () => alert('complete'),
-    canceled: () => alert('canceled'),
-    maxfilesreached: () => alert('maxfilesreached'),
-    maxfilesexceeded: () => alert('maxfilesexceeded'),
-    // All of these receive a list of files as first parameter
-    // and are only called if the uploadMultiple option
-    // in djsConfig is true:
-   // processingmultiple: () => alert('processingmultiple'),
-   // sendingmultiple: () => alert('sendingmultiple'),
-   // successmultiple: () => alert('successmultiple'),
-   // completemultiple: () => alert('completemultiple'),
-   // canceledmultiple: () => alert('canceledmultiple'),
-    // Special Events
-    // totaluploadprogress: ()=>alert('totaluploadprogress'),
-    //reset: () => alert('reset'),全部清空调用reset方法
-    sending: () => {
-      dispatch(change('building', 'uploading', true))
-    },
-    queuecomplete: () => { dispatch(change('building', 'uploading', false)) }
-  }
+  console.log(initialValues)
   let handleSelect=(area)=>{     
-    dispatch(change('building', 'area', JSON.stringify({province:area.province,city:area.city,area:area.area})))
+    //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
+    dispatch(change('building', 'address', {p:area.province,c:area.city,d:area.area}))
   }
+
   return (
     <form onSubmit={handleSubmit} >
+    <RoomEditableTable data={[{floor:1,room:'01,02,03,04,05'},{floor:2,room:'02,03,04,05'},{floor:3,room:'03'}]}/>
+        
       <Field name="id" component="input" type="hidden" label="id" />
+    {/*   <Label>所在地区</Label>
+       <Cities handleSelect={handleSelect} initValue={initialValues.address}/> */}
       <Field readOnly={readOnly}
-        name="loginName"
-        component={inputField}
+        name="name"
+        component={InlineField}
         type="text"
-        label="登录名称"
+        label="楼盘名称"
       />
+       <Col xs="12"><FormGroup>
+          <Label for="exampleSelect">Select</Label>
+          <Input type="select" name="select" id="exampleSelect">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </Input>
+        </FormGroup></Col>
+       <Field name="project_name" component="SelectField" type="select" 
+       label="楼盘名称" options={[1,2,3,4]}/>
+      {/*  <FormGroup>
+          <Label for="exampleSelect">楼盘名称</Label>
+          <Input type="select" name="project_name" id="project_name">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </Input>
+        </FormGroup> */}
+       <Field readOnly={readOnly}
+        name="name"
+        component={InlineField}
+        type="text"
+        label="楼栋名称"
+      />
+      <FormGroup row>
+                    <Col md="3">
+                      <Label>&nbsp;&nbsp;&nbsp;&nbsp;楼栋类型</Label>
+                    </Col>
+                    <Col md="9">
+                    <FormGroup check inline>
+            <Field className="form-check-input"
+              name="category"
+              component="input"
+              type="radio"
+              value="1"
+            />{' '}
+            社区{'  '}
+            </FormGroup>
+                      <FormGroup check inline>
+            <Field className="form-check-input"
+              name="category"
+              component="input"
+              type="radio"
+              value="2"
+            />{' '}
+            商办{'  '}
+            </FormGroup>
+                      <FormGroup check inline>
+            <Field className="form-check-input"
+              name="category"
+              component="input"
+              type="radio"
+              value="3"
+            />{' '}
+            社区与商办
+            </FormGroup>                     
+        </Col>
+        </FormGroup>
+        
       <Field readOnly={readOnly}
-        name="realName"
-        component={inputField}
-        type="text"
-        label="真实姓名"
-      />
-      <Field 
-        name="uploading_oss_flag"
-        component={inputField}
+        name="category"
+        component={InputField}
         type="hidden"
-        label="附件上传"
+        label="楼栋类型"
       />
-      <Cities handleSelect={handleSelect} initValue={{province:'广东省',city:'',area:''}}/>
-      <DropzoneComponent config={componentConfig}
-        /*  eventHandlers={eventHandlers} */
-        djsConfig={djsConfig}
-        eventHandlers={eventHandlers}
-      />
+      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly}/>
+      <Field readOnly={readOnly}
+        name="remark"
+        component={InlineField}
+        type="textarea"
+        height='130px'
+        label="备注"
+      /> 
+      <Col>    
+      <Field readOnly={readOnly}
+        name="remark2"
+        component={InlineField}
+        type={Input}
+        height='130px'
+        label="备注"
+      />  
+       <Field readOnly={readOnly}
+        name="remark3"
+        component={InlineField}
+        type={Input}
+        height='130px'
+        label="备注"
+      /> 
+      </Col>    
       {error && <strong>{error}</strong>}
-      <Field
-        name="uploading"
-        component={inputField}
-        type="hidden"
-        label=""
-      /> <Field
-      name="area"
-      component={inputField}
-      type="text"
-      label=""
-    />
-      <Field name="files" component="hidden" type="text" label="files" />
-      <div>
+   
+   
+    <Row className="align-items-center">
+      <Col col='9'/>
+              <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+                <Button block color="primary" hidden={readOnly} type="submit" disabled={pristine || submitting}>提交</Button>
+              </Col>             
+             {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+                <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
+              </Col>     */}        
+              <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+                <Button block color="danger" onClick={closeForm}>关闭</Button>
+              </Col>
+              </Row>
+     {/*  <div>
         <button hidden={readOnly} type="submit" disabled={pristine || submitting}>
           提交
         </button>
@@ -173,7 +206,7 @@ let EditBuildingForm = props => {
         <button type="button" onClick={() => dispatch(showError('err!!!!!!!'))}>
           关闭
         </button>
-      </div>
+      </div> */}
     </form>
   );
 }
@@ -185,14 +218,20 @@ let EditBuildingForm = props => {
 // Decorate the form component
 EditBuildingForm = reduxForm({
   form: 'building', // a unique name for this form
-  validate,                // 上面定义的一个验证函数，使redux-form同步验证
-  warn
+  validate,                // redux-form同步验证 
 })(EditBuildingForm);
 EditBuildingForm = connect(
-  state => ({
-    initialValues: state.cForm.data, // pull initial values from account reducer
-    oss: state.oss,
-  }),
+  state => {
+    if(state.cForm.data!=undefined&&state.cForm.data!=null&&state.cForm.data._original!=undefined)
+    return ({
+    initialValues: {...state.cForm.data._original,category:""+state.cForm.data._original.category}, // 单选框选中状态必须为字符串，所以要将数字加引号
+  })
+  else{
+    return ({
+      initialValues: {address:{p:'湖北省',c:'武汉市',d:'青山区'}}, // pull initial values from account reducer   
+    })
+  }
+},
   // { load: loadAccount } // bind account loading action creator
 )(EditBuildingForm)
 export default EditBuildingForm;

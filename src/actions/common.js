@@ -68,9 +68,9 @@ export const delList = (ids, module) => dispatch => {
         delUrl = window.TParams.defaultUrl + module + '/del'
         ///////////////////////////////////////////////////////////////////
         //以下部分为测试用，后台API修改后删除些段
-        dispatch(showSuccess('删除成功！'))  //显示删除成功信息
+      /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
         dispatch(delFromGrid(ids, module))    //从列表中删除 
-return
+return */
   //以上部分为测试用，后台API修改后删除些段
             ///////////////////////////////////////////////////////////////////
       
@@ -115,7 +115,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     console.log(getUrl)
     ////////////////////////////////
     //以下部分为测试数据用，API调整好后请删除
-    let sample = {
+    /* let sample = {
         "content": [
             {
                 "id":"195884804934228449",
@@ -165,7 +165,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
         "first": true,
         "numberOfElements": 2
     }
-    return dispatch(getListResult(sample))
+    return dispatch(getListResult(sample)) */
       //以上部分为测试数据用，API调整好后请删除
     ////////////////////////////////
     return fetch(getUrl, args).then(response => response.json())
@@ -203,16 +203,16 @@ export const saveForm = (values, module) => dispatch => {
         saveUrl = window.TParams.defaultUrl + module + '/save'
 ///////////////////////////////////////////////////
 //以下上部分为测试数据用，API调整好后请删除
-dispatch(showSuccess('保存成功！'))
+//dispatch(showSuccess('保存成功！'))
 //回传添加或修改后的记录    
-dispatch(addToGrid(values))
+//dispatch(addToGrid(values))
 //回传添加或修改后的记录id,用于页面标识修改痕迹
 //alert(json.data.id)
-if(values.id!=null&&values.id!='')
+/* if(values.id!=null&&values.id!='')
 dispatch(addEditedIds([values.id]))
 else
 dispatch(addEditedIds([Math.floor(Math.random()*(9999999999-10000000+1)+10000000)]))
-return
+return */
 //以上部分为测试数据用，API调整好后请删除
 //////////////////////////////////////////////////////
 

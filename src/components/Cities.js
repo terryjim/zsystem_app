@@ -61,7 +61,7 @@ class Cities extends Component {
     }
     render() {
 
-        return (<div onChange={this.getSel}><Row><Province pname={this.state.province} /><City pname={this.state.province} cname={this.state.city} /><Area pname={this.state.province} cname={this.state.city} aname={this.state.area} /></Row></div>);
+        return (<Col xs="12"><div onChange={this.getSel}><Row><Province pname={this.state.province} /><City pname={this.state.province} cname={this.state.city} /><Area pname={this.state.province} cname={this.state.city} aname={this.state.area} /></Row></div></Col>)
     }
 }
 const Province = (props) => {

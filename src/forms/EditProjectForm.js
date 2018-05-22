@@ -3,7 +3,7 @@ import { Field, reduxForm, change,FieldArray } from 'redux-form';
 import {ListGroup,CardFooter, Label,Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import {inputField} from '../components/field'
+import {InputField} from '../components/field'
 import Cities from '../components/Cities'
 import DropzoneComponent from 'react-dropzone-component'
 import 'react-dropzone-component/styles/filepicker.css'
@@ -33,7 +33,7 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
         <Field
           name={`${member}.id`}
           type="hidden"
-          component={inputField}
+          component={InputField}
           readOnly={readOnly}
           label={null}
         />
@@ -81,11 +81,11 @@ let EditProjectForm = props => {
   return (
     <form onSubmit={handleSubmit} >
       <Field name="id" component="input" type="hidden" label="id" />
-      <Label>所在地区</Label>
+      <Col xs="12"><Label>所在地区</Label></Col>
        <Cities handleSelect={handleSelect} initValue={initialValues.address}/>
       <Field readOnly={readOnly}
         name="name"
-        component={inputField}
+        component={InputField}
         type="text"
         label="楼盘名称"
       />
@@ -127,14 +127,14 @@ let EditProjectForm = props => {
         
       <Field readOnly={readOnly}
         name="category"
-        component={inputField}
+        component={InputField}
         type="hidden"
         label="楼盘类型"
       />
       <FieldArray name="public_area" component={renderAreas} readOnly={readOnly}/>
       <Field readOnly={readOnly}
         name="remark"
-        component={inputField}
+        component={InputField}
         type="textarea"
         height='130px'
         label="备注"
@@ -143,7 +143,7 @@ let EditProjectForm = props => {
       {error && <strong>{error}</strong>}
       <Field
       name="address"
-      component={inputField}
+      component={InputField}
       type="hidden"
       label=""
     />
