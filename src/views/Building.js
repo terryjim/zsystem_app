@@ -10,6 +10,7 @@ import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 import RoomEditableTable from '../components/RoomEditableTable.js'
 const CheckboxTable = checkboxHOC(ReactTable);
+
 class Building extends Component {
   componentWillMount() {
     //每次打开时清除页面修改痕迹
@@ -237,7 +238,7 @@ class Building extends Component {
               </div>
               <div className="card-block"> */}
 
-                <TopModal isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
+                <TopModal style={{"max-width": "950px"}}  isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
                   className={'modal-primary ' + this.props.className}>
                   <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼盘信息</ModalHeader>
                   <ModalBody>
