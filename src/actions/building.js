@@ -1,5 +1,5 @@
 //根据单元、楼层、楼层房间数自动创建房号
-export const initRooms = (units, floors, rooms) => {
+export const initRooms = (units, floors, rooms) => {   
     // [{unit:1,floors:[{name:1,rooms:[01,02,03]}]}]
    let arr = new Array(units).fill(0)
    arr.map((x, index) => {       

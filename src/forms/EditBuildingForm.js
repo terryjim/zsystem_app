@@ -64,19 +64,30 @@ const validate = values => {
   if (!values.category) {
     errors.category = '楼盘类型不能为空'
   }
+  if (!values.units) {
+    errors.units = '单元数不能为空'
+  }
   return errors
 }
 
 
 
 let EditBuildingForm = props => {
-  const { structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms } = props;
+  const { structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms, unitsValue, floorsValue, roomsValue } = props;
+  //房间分配初始值，编辑表单时不为空
+   let structureArr=new Array(10).fill({})
   //子组件RoomEditableTable返回值
   let getRooms = (values) => {
-    alert(structureValue)
+    //  alert(structureValue)
     console.log(values)
+   /* if (structureValue == undefined) {
+      let tempStrucArr=new Array(unitsValue).fill({})
+       dispatch(change('building', 'structure',tempStrucArr))     
+    } *///else
+      dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
+    console.log(structureValue)
   }
-  console.log(initialValues)
+  // console.log(initialValues)
   let handleSelect = (area) => {
     //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
     dispatch(change('building', 'address', { p: area.province, c: area.city, d: area.area }))
@@ -196,7 +207,20 @@ let EditBuildingForm = props => {
               alert(values.floors)
               alert(values.rooms)
              dispatch(initRooms(values.units,values.floors,values.rooms)) */
-              dispatch(initRooms(4, 20, 4))
+              if (unitsValue == undefined) {
+                alert('请输入单元数')
+                return
+              }
+              if (floorsValue == undefined) {
+                alert('请输入楼层数')
+                return
+              }
+              if (roomsValue == undefined) {
+                alert('请输入每层房间数')
+                return
+              }
+              structureArr= new Array(unitsValue).fill({})
+              dispatch(initRooms(parseInt(unitsValue), parseInt(floorsValue), parseInt(roomsValue)))
             }} >批量创建</Button>
           </Col>
         </Row></Container>
@@ -304,7 +328,10 @@ const mapStateToProps = (state) => {
   console.log(assignRooms)
   // alert(assignRooms.length)
   const structureValue = selector(state, 'structure')
-  return { initialValues, assignRooms, structureValue }
+  const unitsValue = selector(state, 'units')
+  const floorsValue = selector(state, 'floors')
+  const roomsValue = selector(state, 'rooms')
+  return { initialValues, assignRooms, structureValue, unitsValue, floorsValue, roomsValue }
 
 }
 
