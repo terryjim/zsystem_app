@@ -5,9 +5,7 @@ import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import {InputField} from '../components/field'
 import Cities from '../components/Cities'
-import DropzoneComponent from 'react-dropzone-component'
-import 'react-dropzone-component/styles/filepicker.css'
-import 'dropzone/dist/min/dropzone.min.css'
+
 const simpleField = ({readOnly,input, label, type, meta: { touched, error } }) => (            
   <Input type={type} invalid={touched && error?true:false} valid={touched && !error?true:false} id="name" placeholder={label} {...input} readOnly={readOnly}/> 
 )
@@ -70,7 +68,7 @@ const validate = values => {
 }
 
 let EditProjectForm = props => {
-  const {readOnly=false, values, dispatch, error, handleSubmit, pristine, reset, submitting,closeForm,initialValues} = props;
+  const {readOnly=false, dispatch, error, handleSubmit, pristine, reset, submitting,closeForm,initialValues} = props;
  
   console.log(initialValues)
   let handleSelect=(area)=>{     

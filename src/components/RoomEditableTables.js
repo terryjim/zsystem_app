@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-//楼层房间分配可编辑表格
-class RoomEditableTable extends React.Component {
+import RoomEditableTable from './RoomEditableTable.js'
+import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+
+//多个楼层房间分配可编辑表格
+class RoomEditableTables extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+   /*  this.state = {
+      units, floors, floorRooms,
       data: props.data
-    };
-    this.renderEditable = this.renderEditable.bind(this);
+    }; */
+   // this.renderEditable = this.renderEditable.bind(this);
   }
-  renderEditable(cellInfo) {
+/*   renderEditable(cellInfo) {
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
@@ -27,62 +31,28 @@ class RoomEditableTable extends React.Component {
         }}
       />
     );
-  }
+  } */
   render() {
-    const { data } = this.state;
-    return (      
-        <ReactTable 
-        showPagination={false}
-          data={data}
-          columns={[
-            {
-              Header: <a className="fa fa-plus" style={{fontSize:20,color:'blue',alignItems:'top'}}
-                  onClick={
-                    e => { /* const data = [...this.state.data]; */
-                    /*   data[c.index]= e.target.innerHTML; */
-                      
-                      data.splice(data.length,0,{floor:'',room:''})
-                      this.setState({ data });
-                    }
-                  }>
-                </a>,
-              sortable: false,
-              width: 30,
-              filterable: false,
-              Cell: (c) => (<div>               
-                <a className="fa fa-trash-o" style={{fontSize:20,color:'#FF5722',alignItems:'top'}}
-                  onClick={
-                    e => { /* const data = [...this.state.data]; */
-                    /*   data[c.index]= e.target.innerHTML; */
-                    
-                      data.splice(c.index,1)
-                      this.setState({ data });
-                    }
-                  }>
-                </a>
-              </div>)
-            },{
-              Header: "楼层",
-              accessor: "floor",
-              width: 40,
-              Cell: this.renderEditable
-            },
-            {
-              Header: "房号",
-              accessor: "room",
-             // width: 200,
-              Cell: this.renderEditable,
-              sortable:false
-            }
-          ]}
-          resizable={false}
-          minRows={1}          
-          defaultPageSize={999}
-          noDataText='无数据'
-          className="-striped -highlight"
-        />        
+    const { assignRooms } = this.props;
+  
+    return (
+      <Container>
+        <Row>
+          {assignRooms.map(x => (
+            <Col ><Label>{x.unit}</Label><RoomEditableTable data={data[x]} />
+            </Col>))}
+        </Row></Container>
     );
   }
 }
 
-export default RoomEditableTable
+const mapStateToProps = (state) => {
+  let assignRooms = state.assignRooms  
+  return { assignRooms }
+}
+
+
+RoomEditableTables = connect(
+  mapStateToProps
+)(RoomEditableTables)
+export default RoomEditableTables

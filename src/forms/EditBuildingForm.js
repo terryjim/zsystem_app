@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Field, reduxForm, change, FieldArray } from 'redux-form';
+import { Field, reduxForm, change, FieldArray, getFormValues, formValues, formValueSelector } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
+import { initRooms } from '../actions/building'
 import { InputField, SelectField, InlineField } from '../components/field'
 import RoomEditableTable from '../components/RoomEditableTable.js'
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
 )
 const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
-  <div>
+  <Container>
+
     <FormGroup row>
       <Col md="9">
         <Label>&nbsp;&nbsp;&nbsp;&nbsp;公共区域</Label>
@@ -49,12 +51,11 @@ const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
         </Col>
       </ListGroup>
     ))}
-  </div>
+
+  </Container>
 )
 
-const createRooms=(units,floors,floorRooms)=>{
 
-}
 const validate = values => {
   const errors = {}
   if (!values.name) {
@@ -66,9 +67,15 @@ const validate = values => {
   return errors
 }
 
-let EditBuildingForm = props => {
-  const { readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
 
+
+let EditBuildingForm = props => {
+  const { structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms } = props;
+  //子组件RoomEditableTable返回值
+  let getRooms = (values) => {
+    alert(structureValue)
+    console.log(values)
+  }
   console.log(initialValues)
   let handleSelect = (area) => {
     //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
@@ -157,44 +164,63 @@ let EditBuildingForm = props => {
         type="hidden"
         label="楼栋类型"
       />
+      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly} />
+      <hr />
       <Container>
         <Row><Col>
-        <label >单元数量&nbsp;&nbsp;</label>
+          <label >单元数量&nbsp;&nbsp;</label>
           <Field readOnly={readOnly}
             name="units"
             component='input'
-            type="text" 
-            style= {{ 'width':100 }}         
+            type="text"
+            style={{ 'width': 100 }}
           />
-          </Col><Col>
-          <label >楼层数量&nbsp;&nbsp;</label>
-          <Field readOnly={readOnly}
-            name="floors"
-            component='input'
-                        type="text"
-                        style= {{ 'width': 100 }}
-          /></Col><Col>
-          <label >楼层房间数&nbsp;&nbsp;</label>
-          <Field readOnly={readOnly}
-            name="rooms"
-            component='input'
-            type="text"           
-            style= {{ 'width': 100 }}
-          />  </Col><Col>
-          <Button block color="primary" hidden={readOnly} >批量创建</Button>
+        </Col><Col>
+            <label >楼层数量&nbsp;&nbsp;</label>
+            <Field readOnly={readOnly}
+              name="floors"
+              component='input'
+              type="text"
+              style={{ 'width': 100 }}
+            /></Col><Col>
+            <label >楼层房间数&nbsp;&nbsp;</label>
+            <Field readOnly={readOnly}
+              name="rooms"
+              component='input'
+              type="text"
+              style={{ 'width': 100 }}
+            />  </Col><Col>
+            <Button block color="primary" hidden={readOnly} onClick={(values) => {
+              console.log(values)
+              /* alert(values.units)
+              alert(values.floors)
+              alert(values.rooms)
+             dispatch(initRooms(values.units,values.floors,values.rooms)) */
+              dispatch(initRooms(4, 20, 4))
+            }} >批量创建</Button>
           </Col>
         </Row></Container>
-
-
-
       <Container>
+        <hr />
         <Row>
-          {[1, 2, 3, 4].map(x => (
-            <Col ><Label>aaa</Label><RoomEditableTable data={[{ floor: 1, room: '01,02,03,04,05' }, { floor: 2, room: '02,03,04,05' }, { floor: 3, room: '03' }]} />
-            </Col>))}
+          {
+            assignRooms.map(x => {
+              console.log(x)
+              return (
+                <Col ><Label>{x.unit}单元</Label>
+                  <RoomEditableTable unit={x.unit} data={x.floors} handleTableValues={getRooms} />
+                </Col>)
+            })}
         </Row></Container>
 
-      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly} />
+      <Field readOnly={readOnly}
+        name="structure"
+        component={InlineField}
+        type="text"
+        height='130px'
+        value="asdfasdfasdfasdfasdfasdfasdf"
+        label="房间分配"
+      />
       <Field readOnly={readOnly}
         name="remark"
         component={InlineField}
@@ -257,16 +283,28 @@ EditBuildingForm = reduxForm({
   form: 'building', // a unique name for this form
   validate,                // redux-form同步验证 
 })(EditBuildingForm);
-
+const selector = formValueSelector('building')
 const mapStateToProps = (state) => {
   let cFormData = state.cForm.data
-  let assignRooms=state.assignRooms
-  let initialValues={}
-  if (cFormData != undefined && cFormData != null && cFormData._original != undefined) 
-    initialValues={ ...cFormData._original, category: "" + cFormData._original.category } // 单选框选中状态必须为字符串，所以要将数字加引号
-else   
-    initialValues={ address: { p: '湖北省', c: '武汉市', d: '青山区' } } // pull initial values from account reducer   
-  return {initialValues,assignRooms}
+  let assignRooms = state.assignRooms
+  /* console.log(cFormData)
+  let assignRooms = []
+  if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
+    assignRooms = cFormData._original.structure
+  else if(cFormData != undefined && cFormData != null)
+    assignRooms = cFormData.structure */
+  let initialValues = {}
+  if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
+    initialValues = { ...cFormData._original, category: "" + cFormData._original.category } // 单选框选中状态必须为字符串，所以要将数字加引号
+  else
+    initialValues = { address: { p: '湖北省', c: '武汉市', d: '青山区' } } // pull initial values from account reducer   
+  if (assignRooms == undefined)
+    assignRooms = []
+  console.log(cFormData)
+  console.log(assignRooms)
+  // alert(assignRooms.length)
+  const structureValue = selector(state, 'structure')
+  return { initialValues, assignRooms, structureValue }
 
 }
 

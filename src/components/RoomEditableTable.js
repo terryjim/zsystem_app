@@ -7,9 +7,15 @@ class RoomEditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      unit:props.unit,
       data: props.data
+      //[{name:1,rooms:[01,02,03]}]}]
     };
     this.renderEditable = this.renderEditable.bind(this);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({data:nextProps.data}) 
+   
   }
   renderEditable(cellInfo) {
     return (
@@ -29,7 +35,8 @@ class RoomEditableTable extends React.Component {
     );
   }
   render() {
-    const { data } = this.state;
+    const { data } = this.state;  
+    this.props.handleTableValues({unit:this.props.unit,floors:data})
     return (      
         <ReactTable 
         showPagination={false}
@@ -41,7 +48,7 @@ class RoomEditableTable extends React.Component {
                     e => { /* const data = [...this.state.data]; */
                     /*   data[c.index]= e.target.innerHTML; */
                       
-                      data.splice(data.length,0,{floor:'',room:''})
+                      data.splice(data.length,0,{name:'',rooms:''})
                       this.setState({ data });
                     }
                   }>
@@ -63,13 +70,13 @@ class RoomEditableTable extends React.Component {
               </div>)
             },{
               Header: "楼层",
-              accessor: "floor",
+              accessor: "name",
               width: 40,
               Cell: this.renderEditable
             },
             {
               Header: "房号",
-              accessor: "room",
+              accessor: "rooms",
              // width: 200,
               Cell: this.renderEditable,
               sortable:false

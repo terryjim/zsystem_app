@@ -5,11 +5,12 @@ let sample =
     'realName':'',
     'regDate':''}
 
-const cForm = (state = sample, action) => {
+const cForm = (state =sample, action) => {
     if (action.type === 'FILL_FORM') {
         console.log(action.data)
        return {data:action.data}
     }
+    
     return state;
 }
 export default cForm;
