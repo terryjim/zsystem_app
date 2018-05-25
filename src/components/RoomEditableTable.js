@@ -14,6 +14,12 @@ class RoomEditableTable extends React.Component {
     this.renderEditable = this.renderEditable.bind(this);
 //    props.handleTableValues({ unit: props.unit, floors: this.state.data })
   }
+  componentDidMount(){
+    this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
+  }
+  componentDidUpdate(){
+    this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
+  }
   componentWillReceiveProps(nextProps) {
     this.setState({ data: nextProps.data })
 
@@ -36,8 +42,7 @@ class RoomEditableTable extends React.Component {
     );
   }
   render() {
-    const { data } = this.state;
-    this.props.handleTableValues({ unit: this.props.unit, floors: data })
+    const { data } = this.state;    
     return (
       <ReactTable
         showPagination={false}

@@ -86,27 +86,37 @@ let EditBuildingForm = props => {
        let tempStrucArr=new Array(unitsValue).fill({})
         dispatch(change('building', 'structure',tempStrucArr))     
      } *///else
-   // dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
-   let arr=new Array(1).fill({})
-   arr[0]={unit:values.unit,floors:values.data}
-   dispatch(change('building', 'structure', arr))
-  /*  dispatch(change('building', 'structure',[
-    {
-        "unit":"1",
-        "floors":[
-            {"name":"1号楼","rooms":[1,2,3]},
-            {"name":"2号楼","rooms":[1,2,3]}
-        ]
-    }
-])) */
+    // dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
+   /*  let arr = new Array(1).fill({})
+    arr[0] = { unit: values.unit, floors: values.data }
+    dispatch(change('building', 'structure', arr)) */
 
-   console.log(structureValue)
+    if (structureValue == undefined) {
+      let arr = new Array(unitsValue).fill({})
+      arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
+      dispatch(change('building', 'structure', arr))
+   } else {
+      let arr = structureValue
+      arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
+      dispatch(change('building', 'structure', arr))
+   }
+    /*  dispatch(change('building', 'structure',[
+      {
+          "unit":"1",
+          "floors":[
+              {"name":"1号楼","rooms":[1,2,3]},
+              {"name":"2号楼","rooms":[1,2,3]}
+          ]
+      }
+  ])) */
+
+    console.log(structureValue)
   }
   // console.log(initialValues)
   let handleSelect = (area) => {
     //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
     dispatch(change('building', 'address', { p: area.province, c: area.city, d: area.area }))
-  }  
+  }
 
   return (
     <form onSubmit={handleSubmit} >
