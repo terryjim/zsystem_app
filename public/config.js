@@ -10,9 +10,10 @@ const TParams = {
        
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',
-        get_oss_params: defaultUrl + 'oss/getParams',
+        get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
         login:defaultUrl + 'auth/login',
         chgPwd:defaultUrl + 'auth/chgPwd',
+        getProjectList:defaultUrl +'project/getList',//获取楼盘列表
     }
 }
 window.TParams = TParams

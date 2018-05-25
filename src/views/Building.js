@@ -9,9 +9,24 @@ import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 import RoomEditableTable from '../components/RoomEditableTable.js'
+import { getProjectList } from '../actions/project';
 const CheckboxTable = checkboxHOC(ReactTable);
 
 class Building extends Component {
+  constructor(props) {   
+    super(props);
+    //初始化楼盘选择列表（表单下拉框）
+    props.dispatch(getProjectList())
+    this.state = {
+      showEditBuilding: false,//显示修改表单
+      showDanger: false,   //显示错误信息
+      /*    showBuilding: false,   */
+      selection: [],
+      edit: false,//是否为编辑状态
+      selectAll: false,
+    };
+  }
+
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
@@ -21,18 +36,13 @@ class Building extends Component {
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'building'))
     }
+  } componentWillReceiveProps(nextProps) {
+    //确认删除记录操作    
+    if (nextProps.confirmDel) {
+      this.props.dispatch(delList(this.state.selection, 'building'))
+    }
   }
-  constructor(props) {
-    super(props);
-    this.state = {
-      showEditBuilding: false,//显示修改表单
-      showDanger: false,   //显示错误信息
-   /*    showBuilding: false,   */   
-      selection: [],
-      edit:false,//是否为编辑状态
-      selectAll: false,
-    };
-  }
+
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -88,11 +98,11 @@ class Building extends Component {
     });
   }
   //切换查看窗口状态（开、闭）
-/*   toggleShowBuilding = () => {
-    this.setState({
-      showBuilding: !this.state.showBuilding,
-    });
-  } */
+  /*   toggleShowBuilding = () => {
+      this.setState({
+        showBuilding: !this.state.showBuilding,
+      });
+    } */
   //切换错误窗口状态（开、闭）  
   toggleShowDanger = () => {
     this.setState({
@@ -116,17 +126,17 @@ class Building extends Component {
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-edit" style={{fontSize:20,color:'#00adff',alignItems:'top'}}
+      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             //e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditBuilding: true,edit:true })
+            this.setState({ showEditBuilding: true, edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-trash-o" style={{fontSize:20,color:'#FF5722',alignItems:'top'}}
+      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             // e.stopPropagation()
@@ -139,21 +149,21 @@ class Building extends Component {
     accessor: 'project_name',
     Header: '楼盘名称',
 
-  }, {
+  },/*  {
     id: 'address',
     accessor: d => {
-      let address=d.address
-      let ret=''
-      if(address.p!=undefined&&address.p!='')
-      ret+=address.p
-      if(address.c!=undefined&&address.c!='')
-      ret+=address.c
-      if(address.d!=undefined&&address.d!='')
-      ret+=address.d
+      let address = d.address
+      let ret = ''
+      if (address.p != undefined && address.p != '')
+        ret += address.p
+      if (address.c != undefined && address.c != '')
+        ret += address.c
+      if (address.d != undefined && address.d != '')
+        ret += address.d
       return ret
     },
     Header: '所在区域',
-  }, {
+  }, */ {
     accessor: 'name',
     Header: '楼栋名称',
 
@@ -181,12 +191,13 @@ class Building extends Component {
 
     return (
       <div className="animated fadeIn">
-      <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditBuilding: true,edit:true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditBuilding: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
-          if(this.state.selection.length<1)
-          alert('请选择要删除的记录！') 
-          else 
-          this.props.dispatch(showConfirm('是否删除选中记录？', 'building', 'del')); }}>删除</Button>
+          if (this.state.selection.length < 1)
+            alert('请选择要删除的记录！')
+          else
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'building', 'del'));
+        }}>删除</Button>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={buildings.content}
           pages={buildings.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
           className="-striped -highlight"
@@ -212,7 +223,7 @@ class Building extends Component {
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditBuilding: true,edit:false })
+                  this.setState({ showEditBuilding: true, edit: false })
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
@@ -229,7 +240,7 @@ class Building extends Component {
           }
           {...checkboxProps}
         />
-       {/*  <div className="row">
+        {/*  <div className="row">
 
           <div className="col-lg-12">
             <div className="card">
@@ -238,14 +249,14 @@ class Building extends Component {
               </div>
               <div className="card-block"> */}
 
-                <TopModal style={{"max-width": "950px"}}  isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
-                  className={'modal-primary ' + this.props.className}>
-                  <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼盘信息</ModalHeader>
-                  <ModalBody>
-                    <EditBuildingForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditBuilding}/>
-                  </ModalBody>
-                </TopModal>
-               {/*  <TopModal isOpen={this.state.showBuilding} toggle={() => this.toggleShowBuilding()}
+        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
+          className={'modal-primary ' + this.props.className}>
+          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼盘信息</ModalHeader>
+          <ModalBody>
+            <EditBuildingForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditBuilding} />
+          </ModalBody>
+        </TopModal>
+        {/*  <TopModal isOpen={this.state.showBuilding} toggle={() => this.toggleShowBuilding()}
                   className={'modal-primary ' + this.props.className}>
                   <ModalHeader toggle={() => this.toggleShowBuilding()}>查看记录</ModalHeader>
                   <ModalBody>
@@ -255,7 +266,7 @@ class Building extends Component {
                     <Button color="primary" onClick={this.toggleShowBuilding}>关闭</Button>
                   </ModalFooter>
                 </TopModal> */}
-              {/* </div>
+        {/* </div>
             </div>
           </div>
         </div> */}

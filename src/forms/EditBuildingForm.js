@@ -58,14 +58,14 @@ const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
 
 const validate = values => {
   const errors = {}
+  if (!values.project_id) {
+    errors.project_id = '请选择楼盘'
+  }
   if (!values.name) {
-    errors.name = '楼盘名称不能为空'
+    errors.name = '楼栋名称不能为空'
   }
   if (!values.category) {
-    errors.category = '楼盘类型不能为空'
-  }
-  if (!values.units) {
-    errors.units = '单元数不能为空'
+    errors.category = '楼栋类型不能为空'
   }
   return errors
 }
@@ -73,25 +73,40 @@ const validate = values => {
 
 
 let EditBuildingForm = props => {
-  const { structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms, unitsValue, floorsValue, roomsValue } = props;
+  const { projectList, structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms, unitsValue, floorsValue, roomsValue } = props;
+  console.log('##############################33333')
+  console.log(projectList)
   //房间分配初始值，编辑表单时不为空
-   let structureArr=new Array(10).fill({})
+  let structureArr = new Array(10).fill({})
   //子组件RoomEditableTable返回值
   let getRooms = (values) => {
     //  alert(structureValue)
     console.log(values)
-   /* if (structureValue == undefined) {
-      let tempStrucArr=new Array(unitsValue).fill({})
-       dispatch(change('building', 'structure',tempStrucArr))     
-    } *///else
-      dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
-    console.log(structureValue)
+    /* if (structureValue == undefined) {
+       let tempStrucArr=new Array(unitsValue).fill({})
+        dispatch(change('building', 'structure',tempStrucArr))     
+     } *///else
+   // dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
+   let arr=new Array(1).fill({})
+   arr[0]={unit:values.unit,floors:values.data}
+   dispatch(change('building', 'structure', arr))
+  /*  dispatch(change('building', 'structure',[
+    {
+        "unit":"1",
+        "floors":[
+            {"name":"1号楼","rooms":[1,2,3]},
+            {"name":"2号楼","rooms":[1,2,3]}
+        ]
+    }
+])) */
+
+   console.log(structureValue)
   }
   // console.log(initialValues)
   let handleSelect = (area) => {
     //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
     dispatch(change('building', 'address', { p: area.province, c: area.city, d: area.area }))
-  }
+  }  
 
   return (
     <form onSubmit={handleSubmit} >
@@ -99,37 +114,29 @@ let EditBuildingForm = props => {
       <Field name="id" component="input" type="hidden" label="id" />
       {/*   <Label>所在地区</Label>
        <Cities handleSelect={handleSelect} initValue={initialValues.address}/> */}
+      <Field name="id" component="input" type="hidden" label="id" />
+      <Container><FormGroup row>
+        <Label sm={2} for="project_id">楼盘名称</Label>
+        <Col sm={10}>
+          <Field name="project_id" component="select">
+            <option value="">请选择楼盘</option>
+            {projectList != undefined ?
+              projectList.map(pro => (
+                <option value={(pro.id)} key={pro.id}>
+                  {pro.name}
+                </option>
+              )) : ''}
+          </Field>
+        </Col>
+      </FormGroup></Container>
       <Field readOnly={readOnly}
-        name="name"
+        name="project_id"
         component={InlineField}
         type="text"
-        label="楼盘名称"
+        label="楼栋名称"
       />
-
-      <Col xs="12"><FormGroup>
-        <Label for="exampleSelect">Select</Label>
-        <Input type="select" name="select" id="exampleSelect">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </Input>
-      </FormGroup></Col>
-      <Field name="project_name" component="SelectField" type="select"
-        label="楼盘名称" options={[1, 2, 3, 4]} />
-      {/*  <FormGroup>
-          <Label for="exampleSelect">楼盘名称</Label>
-          <Input type="select" name="project_name" id="project_name">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </Input>
-        </FormGroup> */}
       <Field readOnly={readOnly}
-        name="name2"
+        name="name"
         component={InlineField}
         type="text"
         label="楼栋名称"
@@ -219,7 +226,7 @@ let EditBuildingForm = props => {
                 alert('请输入每层房间数')
                 return
               }
-              structureArr= new Array(unitsValue).fill({})
+              structureArr = new Array(unitsValue).fill({})
               dispatch(initRooms(parseInt(unitsValue), parseInt(floorsValue), parseInt(roomsValue)))
             }} >批量创建</Button>
           </Col>
@@ -252,25 +259,6 @@ let EditBuildingForm = props => {
         height='130px'
         label="备注"
       />
-      <Col>
-        <Field readOnly={readOnly}
-          name="remark2"
-          component={InlineField}
-          type={Input}
-          height='130px'
-          label="备注"
-        />
-        <Field readOnly={readOnly}
-          name="remark3"
-          component={InlineField}
-          type={Input}
-          height='130px'
-          label="备注"
-        />
-      </Col>
-      {error && <strong>{error}</strong>}
-
-
       <Row className="align-items-center">
         <Col col='9' />
         <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
@@ -309,6 +297,9 @@ EditBuildingForm = reduxForm({
 })(EditBuildingForm);
 const selector = formValueSelector('building')
 const mapStateToProps = (state) => {
+  let projectList = state.projectList
+  console.log('-------------------------------')
+  console.log(projectList)
   let cFormData = state.cForm.data
   let assignRooms = state.assignRooms
   /* console.log(cFormData)
@@ -331,7 +322,7 @@ const mapStateToProps = (state) => {
   const unitsValue = selector(state, 'units')
   const floorsValue = selector(state, 'floors')
   const roomsValue = selector(state, 'rooms')
-  return { initialValues, assignRooms, structureValue, unitsValue, floorsValue, roomsValue }
+  return { initialValues, assignRooms, structureValue, unitsValue, floorsValue, roomsValue, projectList }
 
 }
 
