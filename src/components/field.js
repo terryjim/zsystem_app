@@ -11,6 +11,7 @@ export const InputField = ({ readOnly, input, label, type, meta: { touched, erro
       <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
       {touched && error && <FormFeedback>{error}</FormFeedback>}
     </FormGroup>
+    {console.log(input)}
   </Col>
   /*  <Label htmlFor="inputIsInvalid">Input is invalid</Label>
    <Input type="text" invalid id="inputIsInvalid" />

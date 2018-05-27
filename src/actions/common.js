@@ -1,3 +1,12 @@
+//判断返回状态码
+const checkStatus=response=>{
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+  const error = new Error(response.statusText);
+  error.response = response;
+  throw error;
+}
 //页面刷新中
 export const loading = () => (
     {
@@ -64,8 +73,9 @@ export const delList = (ids, module) => dispatch => {
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     //如果配置文件中没有专门的删除api则采用约定api地址
     let delUrl = window.TParams.urls['del_' + module]
-    if (delUrl === '')
+    if (delUrl == undefined||delUrl === '')
         delUrl = window.TParams.defaultUrl + module + '/del'
+
         ///////////////////////////////////////////////////////////////////
         //以下部分为测试用，后台API修改后删除些段
       /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
@@ -73,7 +83,7 @@ export const delList = (ids, module) => dispatch => {
 return */
   //以上部分为测试用，后台API修改后删除些段
             ///////////////////////////////////////////////////////////////////
-      
+    
     return fetch(delUrl, args).then(response => response.json())
         .then(json => {
             console.log(json)
@@ -168,7 +178,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     return dispatch(getListResult(sample)) */
       //以上部分为测试数据用，API调整好后请删除
     ////////////////////////////////
-    return fetch(getUrl, args).then(response => response.json())
+    return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
             console.log(json)
             if (json.code !== 0)

@@ -14,6 +14,10 @@ const Building= Loadable({
   loader: () => import('./views/Building'),
   loading: Loading,
 })
+const Property= Loadable({
+  loader: () => import('./views/Property'),
+  loading: Loading,
+})
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
   loading: Loading,
@@ -188,8 +192,8 @@ const routes = [
   { path: '/project/project', name: '楼盘管理', component: Project },
   { path: '/project/building', name: '楼栋管理', component: Building },
 
-  { path: '/property', exact: true, name: '物业公司管理', component: Project },
-  { path: '/property/setting', name: '物业公司设置', component: Project },
+  { path: '/property', exact: true, name: '物业公司管理', component: Property },
+  { path: '/property/setting', name: '物业公司设置', component: Property },
   { path: '/property/department', name: '项目部设置', component: Building },
   { path: '/property/allot', name: '物业楼盘分配', component: Building }, 
 
