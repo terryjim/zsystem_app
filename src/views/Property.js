@@ -118,7 +118,7 @@ class Property extends Component {
       <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
-            //e.stopPropagation()
+            e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditProperty: true, edit: true })
           }
@@ -128,7 +128,7 @@ class Property extends Component {
       <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
-            // e.stopPropagation()
+             e.stopPropagation()
             this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'))
           }
         }>

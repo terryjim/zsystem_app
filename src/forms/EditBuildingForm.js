@@ -132,7 +132,7 @@ let EditBuildingForm = props => {
             <option value="">请选择楼盘</option>
             {projectList != undefined ?
               projectList.map(pro => (
-                <option value={(pro.id)} key={pro.id}>
+                <option value={''+pro.id} key={pro.id}>
                   {pro.name}
                 </option>
               )) : ''}
@@ -142,7 +142,7 @@ let EditBuildingForm = props => {
       <Field readOnly={readOnly}
         name="project_id"
         component={InlineField}
-        type="text"
+        type="hidden"
         label="楼栋名称"
       />
       <Field readOnly={readOnly}
@@ -257,9 +257,8 @@ let EditBuildingForm = props => {
       <Field readOnly={readOnly}
         name="structure"
         component={InlineField}
-        type="text"
-        height='130px'
-        value="asdfasdfasdfasdfasdfasdfasdf"
+        type="hidden"
+        height='130px'      
         label="房间分配"
       />
       <Field readOnly={readOnly}
@@ -272,7 +271,7 @@ let EditBuildingForm = props => {
       <Row className="align-items-center">
         <Col col='9' />
         <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="primary" hidden={readOnly} type="submit" disabled={pristine || submitting}>提交</Button>
+          <Button block color="primary" hidden={readOnly} type="submit" disabled={ submitting}>提交</Button>
         </Col>
         {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
@@ -318,13 +317,18 @@ const mapStateToProps = (state) => {
     assignRooms = cFormData._original.structure
   else if(cFormData != undefined && cFormData != null)
     assignRooms = cFormData.structure */
+    console.log(cFormData)
   let initialValues = {}
   if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
-    initialValues = { ...cFormData._original, category: "" + cFormData._original.category } // 单选框选中状态必须为字符串，所以要将数字加引号
-  else
-    initialValues = { address: { p: '湖北省', c: '武汉市', d: '青山区' } } // pull initial values from account reducer   
-  if (assignRooms == undefined)
+    initialValues = { ...cFormData._original, category: "" + cFormData._original.category,project_id:''+cFormData._original.project_id} // 单选框选中状态必须为字符串，所以要将数字加引号
+  /* else
+    initialValues = { project_id:'196015270102325730' }  */// pull initial values from account reducer   
+    console.log('###########################3')
+    console.log(initialValues.project_id)
+  console.log(initialValues)
+    if (assignRooms == undefined) 
     assignRooms = []
+  
   console.log(cFormData)
   console.log(assignRooms)
   // alert(assignRooms.length)

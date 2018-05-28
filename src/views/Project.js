@@ -118,7 +118,7 @@ class Project extends Component {
       <a className="fa fa-edit" style={{fontSize:20,color:'#00adff',alignItems:'top'}}
         onClick={
           (e) => {
-            //e.stopPropagation()
+            e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditProject: true,edit:true })
           }
@@ -128,7 +128,7 @@ class Project extends Component {
       <a className="fa fa-trash-o" style={{fontSize:20,color:'#FF5722',alignItems:'top'}}
         onClick={
           e => {
-            // e.stopPropagation()
+            e.stopPropagation()
             this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del'))
           }
         }>
@@ -143,11 +143,11 @@ class Project extends Component {
     accessor: d => {
       let address=d.address
       let ret=''
-      if(address.p!=undefined&&address.p!='')
+      if(address!=undefined&&address.p!=undefined&&address.p!='')
       ret+=address.p
-      if(address.c!=undefined&&address.c!='')
+      if(address!=undefined&&address.c!=undefined&&address.c!='')
       ret+=address.c
-      if(address.d!=undefined&&address.d!='')
+      if(address!=undefined&&address.d!=undefined&&address.d!='')
       ret+=address.d
       return ret
     },

@@ -13,7 +13,7 @@ import { getProjectList } from '../actions/project';
 const CheckboxTable = checkboxHOC(ReactTable);
 
 class Building extends Component {
-  constructor(props) {   
+  constructor(props) {
     super(props);
     //初始化楼盘选择列表（表单下拉框）
     props.dispatch(getProjectList())
@@ -129,7 +129,7 @@ class Building extends Component {
       <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
-            //e.stopPropagation()
+            e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditBuilding: true, edit: true })
           }
@@ -139,7 +139,8 @@ class Building extends Component {
       <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
-            // e.stopPropagation()
+             e.stopPropagation()
+            //this.setState({selection:[c.row.id]})
             this.props.dispatch(showConfirm('是否删除选中记录？', 'building', 'del'))
           }
         }>
@@ -280,7 +281,18 @@ const mapStateToProps = (state) => {
   console.log(buildings)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'building' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { buildings, editedIds, confirmDel }
+  let projectList = state.projectList
+  if (buildings.content != undefined)
+    buildings.content.map(b => {
+      //如果没有project_name值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
+      if (b.project_name == undefined || b.project_name == null || b.project_name == '') {
+        let proj = projectList.find(v => v.id = b.project_id)
+        if (proj != null)
+          b.project_name = proj.name
+      }
+    })
+    console.log(buildings)
+  return { buildings, editedIds, confirmDel, projectList }
 }
 
 

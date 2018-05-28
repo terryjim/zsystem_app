@@ -12,11 +12,13 @@ export const getProjectList = () =>dispatch=> {
     let getUrl = window.TParams.urls['getProjectList']
     return fetch(getUrl, args).then(response => response.json())
         .then(json => {
+            console.log(json)
             if (json.code !== 0) {               
                 console.log(json.msg)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
+                console.log(json.data)
                 dispatch(fillProjectList(json.data))
             }
         }).catch(e => {

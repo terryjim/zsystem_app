@@ -93,7 +93,7 @@ return */
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
-                dispatch(showSuccess(json.data))  //显示删除成功信息
+                dispatch(showSuccess('成功删除'+json.data+'条记录！'))  //显示删除成功信息
                 dispatch(delFromGrid(ids, module))    //从列表中删除 
             }
         }).catch(e => {
