@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
+import {getPropertyList} from '../actions/property'
 import { clearEditedIds } from '../actions/common'
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditPropertyForm from '../forms/EditPropertyForm'
+import EditDepartmentForm from '../forms/EditDepartmentForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 
 const CheckboxTable = checkboxHOC(ReactTable);
-class Property extends Component {
+class Department extends Component {
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
@@ -18,15 +19,17 @@ class Property extends Component {
   componentWillReceiveProps(nextProps) {
     //确认删除记录操作    
     if (nextProps.confirmDel) {
-      this.props.dispatch(delList(this.state.selection, 'property'))
+      this.props.dispatch(delList(this.state.selection, 'department'))
     }
   }
   constructor(props) {
     super(props);
+     //初始化物业公司选择列表（表单下拉框）
+     props.dispatch(getPropertyList())
     this.state = {
-      showEditProperty: false,//显示修改表单
+      showEditDepartment: false,//显示修改表单
       showDanger: false,   //显示错误信息
-      /*    showProperty: false,   */
+      /*    showDepartment: false,   */
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
@@ -62,7 +65,7 @@ class Property extends Component {
     if (selectAll) {
       // we need to get at the internals of ReactTable
       const wrappedInstance = this.checkboxTable.getWrappedInstance();
-      // the 'sortedData' property contains the currently accessible records based on the filter and sort
+      // the 'sortedData' department contains the currently accessible records based on the filter and sort
       const currentRecords = wrappedInstance.getResolvedState().sortedData;
       // we just push all the IDs onto the selection array
       currentRecords.forEach(item => {
@@ -81,15 +84,15 @@ class Property extends Component {
     return this.state.selection.includes(key);
   };
   //切换编辑窗口状态（开、闭）
-  toggleShowEditProperty = () => {
+  toggleShowEditDepartment = () => {
     this.setState({
-      showEditProperty: !this.state.showEditProperty,
+      showEditDepartment: !this.state.showEditDepartment,
     });
   }
   //切换查看窗口状态（开、闭）
-  /*   toggleShowProperty = () => {
+  /*   toggleShowDepartment = () => {
       this.setState({
-        showProperty: !this.state.showProperty,
+        showDepartment: !this.state.showDepartment,
       });
     } */
   //切换错误窗口状态（开、闭）  
@@ -101,8 +104,8 @@ class Property extends Component {
   submit = (values) => {
     console.log(values)
 
-    this.props.dispatch(saveForm(values, 'property'))
-    this.setState({ showEditProperty: false })
+    this.props.dispatch(saveForm(values, 'department'))
+    this.setState({ showEditDepartment: false })
   }
   columns = [{
     accessor: 'id',
@@ -120,7 +123,7 @@ class Property extends Component {
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditProperty: true, edit: true })
+            this.setState({ showEditDepartment: true, edit: true })
           }
         }>
       </a>
@@ -129,20 +132,39 @@ class Property extends Component {
         onClick={
           e => {
             e.stopPropagation()
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'))
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'))
           }
         }>
       </a>
     </div>)
   }, {
-    accessor: 'companyName',
+   // accessor: 'companyName',
     Header: '物业名称',
-    width: 400,
-  }, {
+    width: 300,
+    id:'companyName',
+    accessor:d=>d.property==undefined?'':d.property.companyName
+   /*  Cell: c => c.original.department.companyName */
+  }
+  , {
+    // accessor: 'companyName',
+     Header: '物业ID',
+     //width: 400,
+     id:'pid',
+     accessor:d=>d.property==undefined?'':d.property.id,
+     //show: false,
+   }, {
+    accessor: 'name',
+    Header: '项目部名称',
+    width: 300,
+  },{
     accessor: 'enabled',
     Header: '状态',
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
+  },{
+    accessor: 'admin',
+    Header: '账号',
+    width: 80
   },  /*{
     //accessor: 'enabled',
     id:'enabled',
@@ -165,21 +187,21 @@ class Property extends Component {
       toggleAll,
       selectType: "checkbox",
     };
-    let Properties = this.props.Properties
+    let Departments = this.props.Departments
 
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditProperty: true, edit: true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditDepartment: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
           else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'));
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'));
         }}>删除</Button>
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Properties.content}
-          pages={Properties.totalPages} columns={this.columns} defaultPageSize={10} filterable
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Departments.content}
+          pages={Departments.totalPages} columns={this.columns} defaultPageSize={10} filterable
           className="-striped -highlight"
-          /* onPageChange={(pageIndex) => this.props.dispatch(getProperty({page:pageIndex,size:10}))}  */
+          /* onPageChange={(pageIndex) => this.props.dispatch(getDepartment({page:pageIndex,size:10}))}  */
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           onFetchData={(state, instance) => {
             let whereSql = ''
@@ -191,7 +213,7 @@ class Property extends Component {
                   whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
             )
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'property'))
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'department'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -205,7 +227,7 @@ class Property extends Component {
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditProperty: true, edit: false })
+                  this.setState({ showEditDepartment: true, edit: false })
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
@@ -223,11 +245,11 @@ class Property extends Component {
           {...checkboxProps}
         />
 
-        <TopModal isOpen={this.state.showEditProperty} toggle={() => this.toggleShowEditProperty()}
+        <TopModal isOpen={this.state.showEditDepartment} toggle={() => this.toggleShowEditDepartment()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditProperty()}>物业公司信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditDepartment()}>项目部信息</ModalHeader>
           <ModalBody>
-            <EditPropertyForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditProperty} />
+            <EditDepartmentForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditDepartment} />
           </ModalBody>
         </TopModal>
 
@@ -235,17 +257,17 @@ class Property extends Component {
     )
   }
 }
-//获取property记录集及修改记录ＩＤ数组
+//获取Department记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
-  let Properties = state.cList
-  console.log(Properties)
+  let Departments = state.cList
+ 
   let editedIds = state.editedIds
-  let confirmDel = state.confirm.module === 'property' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { Properties, editedIds, confirmDel }
+  let confirmDel = state.confirm.module === 'department' && state.confirm.operate === 'del' ? state.confirm.confirm : false
+  return { Departments, editedIds, confirmDel }
 }
 
 
-Property = connect(
+Department = connect(
   mapStateToProps
-)(Property)
-export default Property;
+)(Department)
+export default Department;

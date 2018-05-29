@@ -14,6 +14,7 @@ const TParams = {
         login:defaultUrl + 'auth/login',
         chgPwd:defaultUrl + 'auth/chgPwd',
         getProjectList:defaultUrl +'project/getList',//获取楼盘列表
+        getPropertyList:defaultUrl +'property/getList',//获取物业公司列表
     }
 }
 window.TParams = TParams
