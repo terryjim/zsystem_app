@@ -26,24 +26,32 @@ let EditDepartmentForm = props => {
     <form onSubmit={handleSubmit} >
       <Field name="id" component="input" type="hidden" label="id" />
       <Container><FormGroup row>
-        <Label sm={3} for="project_id">物业公司</Label>
+        <Label sm={3} for="property">物业公司</Label>
         <Col sm={9}>
-          <Field name="project_id" component="select">
+          <Field name="property" component="select">
             <option value="">请选择物业公司</option>
             {propertyList != undefined ?
               propertyList.map(pro => (
                 <option value={''+pro.id} key={pro.id}>
-                  {pro.name}
+                  {pro.companyName}
                 </option>
               )) : ''}
           </Field>
         </Col>
       </FormGroup></Container>
       <Field readOnly={readOnly}
-        name="companyName"
+        name="property"
         component={InputField}
         type="text"
         label="物业名称"
+       // parse={(value, name)=>({property:{id:value}})}
+        normalize={value=>({id:value})}
+      />
+       <Field readOnly={readOnly}
+        name="name"
+        component={InputField}
+        type="text"
+        label="项目部"
       />
       <FormGroup row>
         <Col md="3">
