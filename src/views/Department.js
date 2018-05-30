@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
-import {getPropertyList} from '../actions/property'
+import { getPropertyList } from '../actions/property'
 import { clearEditedIds } from '../actions/common'
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditDepartmentForm from '../forms/EditDepartmentForm'
@@ -24,8 +24,8 @@ class Department extends Component {
   }
   constructor(props) {
     super(props);
-     //初始化物业公司选择列表（表单下拉框）
-     props.dispatch(getPropertyList())
+    //初始化物业公司选择列表（表单下拉框）
+    props.dispatch(getPropertyList())
     this.state = {
       showEditDepartment: false,//显示修改表单
       showDanger: false,   //显示错误信息
@@ -103,7 +103,8 @@ class Department extends Component {
   }
   submit = (values) => {
     console.log(values)
-
+    values.property = {id: values.property} 
+     console.log(values)
     this.props.dispatch(saveForm(values, 'department'))
     this.setState({ showEditDepartment: false })
   }
@@ -138,30 +139,30 @@ class Department extends Component {
       </a>
     </div>)
   }, {
-   // accessor: 'companyName',
+    // accessor: 'companyName',
     Header: '物业名称',
     width: 300,
-    id:'companyName',
-    accessor:d=>d.property==undefined?'':d.property.companyName
-   /*  Cell: c => c.original.department.companyName */
+    id: 'companyName',
+    accessor: d => d.property == undefined ? '' : d.property.companyName
+    /*  Cell: c => c.original.department.companyName */
   }
-  , {
+    , {
     // accessor: 'companyName',
-     Header: '物业ID',
-     //width: 400,
-     id:'pid',
-     accessor:d=>d.property==undefined?'':d.property.id,
-     //show: false,
-   }, {
+    Header: '物业ID',
+    //width: 400,
+    id: 'pid',
+    accessor: d => d.property == undefined ? '' : d.property.id,
+    //show: false,
+  }, {
     accessor: 'name',
     Header: '项目部名称',
     width: 300,
-  },{
+  }, {
     accessor: 'enabled',
     Header: '状态',
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
-  },{
+  }, {
     accessor: 'admin',
     Header: '账号',
     width: 80
@@ -260,7 +261,7 @@ class Department extends Component {
 //获取Department记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let Departments = state.cList
- 
+
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'department' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   return { Departments, editedIds, confirmDel }

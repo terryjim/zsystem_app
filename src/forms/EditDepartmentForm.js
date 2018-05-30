@@ -19,7 +19,7 @@ const validate = values => {
 }
 
 let EditDepartmentForm = props => {
-  const { propertyList,readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
+  const { propertyList, readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
 
 
   return (
@@ -28,26 +28,26 @@ let EditDepartmentForm = props => {
       <Container><FormGroup row>
         <Label sm={3} for="property">物业公司</Label>
         <Col sm={9}>
-          <Field name="property" component="select">
+          <Field name="property" component="select"  >
             <option value="">请选择物业公司</option>
             {propertyList != undefined ?
               propertyList.map(pro => (
-                <option value={''+pro.id} key={pro.id}>
+                <option value={pro.id} key={pro.id}>
                   {pro.companyName}
                 </option>
               )) : ''}
           </Field>
         </Col>
       </FormGroup></Container>
-      <Field readOnly={readOnly}
+      {/*  <Field readOnly={readOnly}
         name="property"
         component={InputField}
         type="text"
         label="物业名称"
        // parse={(value, name)=>({property:{id:value}})}
         normalize={value=>({id:value})}
-      />
-       <Field readOnly={readOnly}
+      />*/}
+      <Field readOnly={readOnly}
         name="name"
         component={InputField}
         type="text"
@@ -78,14 +78,14 @@ let EditDepartmentForm = props => {
           </FormGroup>
         </Col>
       </FormGroup>
-     {/* 
+      {/* 
       <Field readOnly={readOnly}
         name="enabled"
         component={InputField}
         type="text"
         label="楼栋类型"
       />*/}
-       <Field readOnly={readOnly}
+      <Field readOnly={readOnly}
         name="admin"
         component={InputField}
         type="text"
@@ -106,7 +106,7 @@ let EditDepartmentForm = props => {
         <Col col='9' />
         <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
           <Button block color="primary" hidden={readOnly} type="submit" disabled={pristine || submitting}>提交</Button>
-        </Col>      
+        </Col>
         {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
               </Col>     */}
@@ -132,11 +132,16 @@ const mapStateToProps = (state) => {
   let propertyList = state.propertyList
   console.log(state.cForm.data)
   let initEnabled = '0'
-  if (state.cForm.data != undefined && state.cForm.data != null)
+  let property = 0
+  if (state.cForm.data != undefined && state.cForm.data != null) {
     initEnabled = '' + state.cForm.data.enabled
-  if (initEnabled == undefined || initEnabled == null)
-    initEnabled = '0'
-  return { initialValues: { ...state.cForm.data, enabled: initEnabled },propertyList }// 单选框选中状态必须为字符串，所以要将数字加引号
+    if (state.cForm.data._original != undefined && state.cForm.data._original != null) {
+      property = state.cForm.data._original.property.id
+    }
+    if (initEnabled == undefined || initEnabled == null)
+      initEnabled = '0'
+  }
+  return { initialValues: { ...state.cForm.data, enabled: initEnabled, property }, propertyList }// 单选框选中状态必须为字符串，所以要将数字加引号
 }
 
 EditDepartmentForm = connect(
