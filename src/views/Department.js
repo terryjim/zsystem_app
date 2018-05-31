@@ -163,7 +163,7 @@ class Department extends Component {
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
   }, {
-    accessor: 'admin',
+    accessor: 'manager',
     Header: '账号',
     width: 80
   },  /*{
