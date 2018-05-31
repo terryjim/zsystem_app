@@ -129,7 +129,7 @@ let EditProjectForm = props => {
         type="hidden"
         label="楼盘类型"
       />
-      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly}/>
+      <FieldArray name="publicArea" component={renderAreas} readOnly={readOnly}/>
       <Field readOnly={readOnly}
         name="remark"
         component={InputField}
