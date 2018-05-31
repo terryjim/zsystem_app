@@ -11,9 +11,16 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 )
 
 const validate = values => {
+  console.log(values)
   const errors = {}
   if (!values.name) {
     errors.name = '项目部名称不能为空'
+  }
+  if (!values.property||values.property==0||values.property==''||values.property==null) {
+    errors.property = '物业公司不能为空'
+  }
+  if (!values.manager) {
+    errors.manager = '管理员名称不能为空'
   }
   return errors
 }
@@ -39,14 +46,14 @@ let EditDepartmentForm = props => {
           </Field>
         </Col>
       </FormGroup></Container>
-      {/*  <Field readOnly={readOnly}
+       <Field readOnly={readOnly}
         name="property"
         component={InputField}
-        type="text"
+        type="hidden"
         label="物业名称"
        // parse={(value, name)=>({property:{id:value}})}
-        normalize={value=>({id:value})}
-      />*/}
+      // normalize={value=>({id:value})}
+      />
       <Field readOnly={readOnly}
         name="name"
         component={InputField}
@@ -86,7 +93,7 @@ let EditDepartmentForm = props => {
         label="楼栋类型"
       />*/}
       <Field readOnly={readOnly}
-        name="admin"
+        name="manager"
         component={InputField}
         type="text"
         label="管理员账号"

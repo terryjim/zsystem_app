@@ -11,7 +11,6 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 )
 const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
   <Container>
-
     <FormGroup row>
       <Col md="9">
         <Label>&nbsp;&nbsp;&nbsp;&nbsp;公共区域</Label>

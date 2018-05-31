@@ -22,7 +22,9 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
       {submitFailed && error && <span>{error}</span>}
     </Col>
     </FormGroup>
-    {fields.map((member, index) => (
+    {
+      fields==undefined?'':
+    fields.map((member, index) => (
       <ListGroup>   
          <Col md="1"/>
       <Col md="11">
@@ -30,7 +32,7 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
       <InputGroup>
         <Field
           name={`${member}.id`}
-          type="hidden"
+          type="text"
           component={InputField}
           readOnly={readOnly}
           label={null}
@@ -43,7 +45,8 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
           type="text"
           label={null}
           readOnly={readOnly}
-          component={simpleField}         
+          component={simpleField}    
+       
         />
         <InputGroupAddon addonType="append">
         <Button color="danger"  hidden={readOnly}
@@ -129,7 +132,7 @@ let EditProjectForm = props => {
         type="hidden"
         label="楼盘类型"
       />
-      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly}/>
+      <FieldArray name="publicArea" component={renderAreas} readOnly={readOnly}/>
       <Field readOnly={readOnly}
         name="remark"
         component={InputField}
