@@ -147,7 +147,7 @@ class Building extends Component {
       </a>
     </div>)
   }, {
-    accessor: 'project_name',
+    accessor: 'projectName',
     Header: '楼盘名称',
 
   },/*  {
@@ -284,11 +284,11 @@ const mapStateToProps = (state) => {
   let projectList = state.projectList
   if (buildings.content != undefined)
     buildings.content.map(b => {
-      //如果没有project_name值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
-      if (b.project_name == undefined || b.project_name == null || b.project_name == '') {
-        let proj = projectList.find(v => v.id = b.project_id)
+      //如果没有projectName值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
+      if (b.projectName == undefined || b.projectName == null || b.projectName == '') {
+        let proj = projectList.find(v => v.id = b.projectId)
         if (proj != null)
-          b.project_name = proj.name
+          b.projectName = proj.name
       }
     })
     console.log(buildings)

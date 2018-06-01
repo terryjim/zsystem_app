@@ -22,7 +22,7 @@ const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
         {submitFailed && error && <span>{error}</span>}
       </Col>
     </FormGroup>
-    {fields.map((member, index) => (
+    {fields==undefined?'':fields.map((member, index) => (
       <ListGroup>
         <Col md="1" />
         <Col md="11">
@@ -57,8 +57,8 @@ const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
 
 const validate = values => {
   const errors = {}
-  if (!values.project_id) {
-    errors.project_id = '请选择楼盘'
+  if (!values.projectId) {
+    errors.projectId = '请选择楼盘'
   }
   if (!values.name) {
     errors.name = '楼栋名称不能为空'
@@ -125,9 +125,9 @@ let EditBuildingForm = props => {
        <Cities handleSelect={handleSelect} initValue={initialValues.address}/> */}
       <Field name="id" component="input" type="hidden" label="id" />
       <Container><FormGroup row>
-        <Label sm={2} for="project_id">楼盘名称</Label>
+        <Label sm={2} for="projectId">楼盘名称</Label>
         <Col sm={10}>
-          <Field name="project_id" component="select">
+          <Field name="projectId" component="select">
             <option value="">请选择楼盘</option>
             {projectList != undefined ?
               projectList.map(pro => (
@@ -139,10 +139,10 @@ let EditBuildingForm = props => {
         </Col>
       </FormGroup></Container>
       <Field readOnly={readOnly}
-        name="project_id"
+        name="projectId"
         component={InlineField}
         type="hidden"
-        label="楼栋名称"
+        label="楼盘名称"
       />
       <Field readOnly={readOnly}
         name="name"
@@ -191,7 +191,7 @@ let EditBuildingForm = props => {
         type="hidden"
         label="楼栋类型"
       />
-      <FieldArray name="public_area" component={renderAreas} readOnly={readOnly} />
+      <FieldArray name="publicArea" component={renderAreas} readOnly={readOnly} />
       <hr />
       <Container>
         <Row><Col>
@@ -319,11 +319,11 @@ const mapStateToProps = (state) => {
     console.log(cFormData)
   let initialValues = {}
   if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
-    initialValues = { ...cFormData._original, category: "" + cFormData._original.category,project_id:''+cFormData._original.project_id} // 单选框选中状态必须为字符串，所以要将数字加引号
+    initialValues = { ...cFormData._original, category: "" + cFormData._original.category,projectId:''+cFormData._original.projectId} // 单选框选中状态必须为字符串，所以要将数字加引号
   /* else
-    initialValues = { project_id:'196015270102325730' }  */// pull initial values from account reducer   
+    initialValues = { projectId:'196015270102325730' }  */// pull initial values from account reducer   
     console.log('###########################3')
-    console.log(initialValues.project_id)
+    console.log(initialValues.projectId)
   console.log(initialValues)
     if (assignRooms == undefined) 
     assignRooms = []

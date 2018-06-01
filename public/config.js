@@ -7,7 +7,7 @@ const TParams = {
         /* get_project_list: defaultUrl + 'project/getByPage',
         save_project: defaultUrl + 'project/save',
         del_project: defaultUrl + 'project/del', */
-       
+       get_department_buildings_list:defaultUrl + 'department/getDepartmentsAndBuildings',
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',
         get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置

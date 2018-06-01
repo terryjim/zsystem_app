@@ -16,7 +16,7 @@ const validate = values => {
   if (!values.name) {
     errors.name = '项目部名称不能为空'
   }
-  if (!values.property||values.property==0||values.property==''||values.property==null) {
+  if (!values.property || values.property == 0 || values.property == '' || values.property == null) {
     errors.property = '物业公司不能为空'
   }
   if (!values.manager) {
@@ -26,7 +26,7 @@ const validate = values => {
 }
 
 let EditDepartmentForm = props => {
-  const { propertyList, readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
+  const { propertyList, projectList,readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
 
 
   return (
@@ -46,14 +46,40 @@ let EditDepartmentForm = props => {
           </Field>
         </Col>
       </FormGroup></Container>
-       <Field readOnly={readOnly}
+      <Field readOnly={readOnly}
         name="property"
         component={InputField}
         type="hidden"
         label="物业名称"
-       // parse={(value, name)=>({property:{id:value}})}
+      // parse={(value, name)=>({property:{id:value}})}
       // normalize={value=>({id:value})}
       />
+<Container><FormGroup row>
+        <Label sm={3} for="project">楼盘名称</Label>
+        <Col sm={9}>
+          <Field name="project" component="select"  >
+            <option value="">请选择楼盘</option>
+            {projectList != undefined ?
+              projectList.map(pro => (
+                <option value={pro.id} key={pro.id}>
+                  {pro.name}
+                </option>
+              )) : ''}
+          </Field>
+        </Col>
+      </FormGroup></Container>
+      <Field readOnly={readOnly}
+        name="project"
+        component={InputField}
+        type="hidden"
+        label="楼盘名称"
+      // parse={(value, name)=>({property:{id:value}})}
+      // normalize={value=>({id:value})}
+      />
+
+
+
+
       <Field readOnly={readOnly}
         name="name"
         component={InputField}
@@ -137,18 +163,23 @@ EditDepartmentForm = reduxForm({
 })(EditDepartmentForm);
 const mapStateToProps = (state) => {
   let propertyList = state.propertyList
+  let projectList = state.projectList
   console.log(state.cForm.data)
   let initEnabled = '0'
   let property = 0
+  let project = 0
   if (state.cForm.data != undefined && state.cForm.data != null) {
     initEnabled = '' + state.cForm.data.enabled
     if (state.cForm.data._original != undefined && state.cForm.data._original != null) {
+      if(state.cForm.data._original.property!=undefined)
       property = state.cForm.data._original.property.id
+      if(state.cForm.data._original.project!=undefined)
+      project = state.cForm.data._original.project.id
     }
     if (initEnabled == undefined || initEnabled == null)
       initEnabled = '0'
   }
-  return { initialValues: { ...state.cForm.data, enabled: initEnabled, property }, propertyList }// 单选框选中状态必须为字符串，所以要将数字加引号
+  return { initialValues: { ...state.cForm.data, enabled: initEnabled, property, project }, propertyList, projectList }// 单选框选中状态必须为字符串，所以要将数字加引号
 }
 
 EditDepartmentForm = connect(

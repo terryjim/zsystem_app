@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { getPropertyList } from '../actions/property'
-import { getProjectList } from '../actions/project';
 import { clearEditedIds } from '../actions/common'
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditDepartmentForm from '../forms/EditDepartmentForm'
+import EditDepartmentAndBuildingsForm from '../forms/EditDepartmentAndBuildingsForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 
 const CheckboxTable = checkboxHOC(ReactTable);
-class Department extends Component {
+class DepartmentAndBuildings extends Component {
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
@@ -25,9 +24,8 @@ class Department extends Component {
   }
   constructor(props) {
     super(props);
-    //初始化物业公司\楼盘选择列表（表单下拉框）
+    //初始化物业公司选择列表（表单下拉框）
     props.dispatch(getPropertyList())
-    props.dispatch(getProjectList())
     this.state = {
       showEditDepartment: false,//显示修改表单
       showDanger: false,   //显示错误信息
@@ -106,7 +104,6 @@ class Department extends Component {
   submit = (values) => {
     console.log(values)
     values.property = {id: values.property} 
-    values.project={id:values.project}
      console.log(values)
     this.props.dispatch(saveForm(values, 'department'))
     this.setState({ showEditDepartment: false })
@@ -131,15 +128,7 @@ class Department extends Component {
           }
         }>
       </a>
-      &nbsp;
-      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
-        onClick={
-          e => {
-            e.stopPropagation()
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'))
-          }
-        }>
-      </a>
+    
     </div>)
   }, {
     // accessor: 'companyName',
@@ -161,30 +150,26 @@ class Department extends Component {
     Header: '项目部名称',
     width: 300,
   }, {
-    accessor: 'enabled',
-    Header: '状态',
-    width: 80,
-    Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
-  }, {
-   // accessor: 'projectName',
-   id:'project',
-    Header: '所属楼盘',
-    accessor: d => d.project == undefined ? '' : d.project.name,
-    width: 200
-  }, {
-    accessor: 'manager',
-    Header: '账号',
-    width: 80
+     accessor: 'projectName',
+    Header: '楼盘名称',
+    width: 300,   
+    //accessor: d => d.property == undefined ? '' : d.property.companyName
+    /*  Cell: c => c.original.department.companyName */
+  }
+    , {
+     accessor: 'projectId',
+    Header: '楼盘ID',
+    //width: 400,
+    id: 'pid',
+    //accessor: d => d.property == undefined ? '' : d.property.id,
+    //show: false,
   },  /*{
     //accessor: 'enabled',
     id:'enabled',
     Header: '状态',
     width: 80,
     accessor: d => (d.enabled ? ( <Badge color="primary">启用中</Badge>) : ( <Badge color="danger">已禁用</Badge>))
-  },*/ {
-    accessor: 'remark',
-    Header: '备注',
-  }
+  },*/ 
   ];
 
   render() {
@@ -201,13 +186,7 @@ class Department extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditDepartment: true, edit: true }) }}>新增</Button>
-        <Button color="danger" size="sm" onClick={() => {
-          if (this.state.selection.length < 1)
-            alert('请选择要删除的记录！')
-          else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'));
-        }}>删除</Button>
+        
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Departments.content}
           pages={Departments.totalPages} columns={this.columns} defaultPageSize={10} filterable
           className="-striped -highlight"
@@ -223,7 +202,7 @@ class Department extends Component {
                   whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
             )
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'department'))
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'department_buildings'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -257,9 +236,9 @@ class Department extends Component {
 
         <TopModal isOpen={this.state.showEditDepartment} toggle={() => this.toggleShowEditDepartment()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditDepartment()}>项目部信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditDepartment()}>分配楼栋信息</ModalHeader>
           <ModalBody>
-            <EditDepartmentForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditDepartment} />
+            <EditDepartmentAndBuildingsForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditDepartment} />
           </ModalBody>
         </TopModal>
 
@@ -277,7 +256,7 @@ const mapStateToProps = (state) => {
 }
 
 
-Department = connect(
+DepartmentAndBuildings = connect(
   mapStateToProps
-)(Department)
-export default Department;
+)(DepartmentAndBuildings)
+export default DepartmentAndBuildings;
