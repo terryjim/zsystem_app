@@ -4,33 +4,51 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import { InputField } from '../components/field'
-
+import BuildingsAllotTable from '../components/BuildingsAllotTable.js'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
 )
-const buildingsField = ({ readOnly, fields, meta: { error, submitFailed } }) =>{console.log(fields);return (
+const checkField = ({ readOnly, input, label, value, meta: { touched, error } }) => (
+   <FormGroup row>
+         {/* <Label for="checkbox2" sm={2}>Checkbox</Label>*/}
+          <Col sm={{ size: 10 }}>
+            <FormGroup check>
+              <Label check>
+                <Input type="checkbox"  />{' '}
+               {label}
+              </Label>
+            </FormGroup>
+          </Col>
+        </FormGroup>
+ )
+const buildingsField = ({ readOnly, fields, buildingList,meta: { error, submitFailed } }) =>{console.log(fields);return (
 
   <Container>
    
     {
-      fields==undefined?'':fields.map((member, index) => (
+      buildingList==undefined?'':buildingList.map((member, index) => {
+        console.log(member)
+        return(
       <ListGroup>
         <Col md="1" />
         <Col md="11">
           <InputGroup>
+           <label htmlFor={member.id}>{member.name}</label>
             <Field
-              name={`${member}.id`}
+              name={member.id}
+              id={member.id}
               type="checkbox"
-              component={InputField}
+         
+              component='input'
               readOnly={readOnly}
-              label={member.name}
+   checked={member.id==='452070951882850304'}
             />  
              </InputGroup> 
              
         </Col>
       </ListGroup>
-    ))}
+    )})}
 
   </Container>
 )}
@@ -46,29 +64,69 @@ const validate = values => {
 }
 
 let EditDepartmentAndBuildingsForm = props => {
-  const { propertyList, projectList,readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
-
-
+  const {readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues,pid } = props;
+//const buildingList=initialValues.buildingList
+ let getBuildings = (values) => {
+    console.log('---------------------------------------')
+    console.log(values)
+  
+  }
   return (
     <form onSubmit={handleSubmit} >
       <Field name="id" component="input" type="hidden" label="id" />
       
       <Field readOnly={true}
-        id="property"
+        name="property"
         component={InputField}
         type="text"
         label="物业名称"    
       />
- <FieldArray name="buildings" component={buildingsField} readOnly={readOnly} />
-
-
-
-      <Field readOnly={true}
+       <Field readOnly={true}
         name="name"
         component={InputField}
         type="text"
         label="项目部"
       />
+  <Field readOnly={true}
+        name="projectName"
+        component={InputField}
+        type="text"
+        label="所属楼盘"
+      />
+<BuildingsAllotTable name="buildings" pid={pid}  handleTableValues={getBuildings}/>
+
+ {/*<FieldArray name="building" component={buildingsField} readOnly={readOnly} buildingList={buildingList}  label="所辖楼栋1"  />*/}
+{/* <Container><FormGroup row>
+        <Label sm={2} for="projectId">所辖楼栋2</Label>
+        <Col sm={10}>
+ {buildingList != undefined ?
+              buildingList.map(member => (
+                <FormGroup row> <label htmlFor={member.id}>{member.name}</label>
+                <Field name={member.id} type="checkbox" component="input"  />        
+           </FormGroup>
+              )) : ''}*/}
+
+
+
+
+      {/*    <Field name="projectId" component="select">
+            <option value="">请选择楼盘</option>
+            {projectList != undefined ?
+              projectList.map(pro => (
+                <option value={''+pro.id} key={pro.id}>
+                  {pro.name}
+                </option>
+              )) : ''}
+          </Field>*/}
+   
+   
+{/*      <Field 
+        name="buildings"
+        component={InputField}
+        type="text"
+          
+      />*/}
+
 
       {error && <strong>{error}</strong>}
 
@@ -76,7 +134,7 @@ let EditDepartmentAndBuildingsForm = props => {
       <Row className="align-items-center">
         <Col col='9' />
         <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="primary" hidden={readOnly} type="submit" disabled={pristine || submitting}>提交</Button>
+          <Button block color="primary" hidden={readOnly} type="submit" disabled={submitting}>提交</Button>
         </Col>
         {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
@@ -96,7 +154,7 @@ let EditDepartmentAndBuildingsForm = props => {
 
 // Decorate the form component
 EditDepartmentAndBuildingsForm = reduxForm({
-  form: 'department', // a unique name for this form
+  form: 'EditDepartmentAndBuildingsForm', // a unique name for this form
   validate,                // redux-form同步验证 
 })(EditDepartmentAndBuildingsForm);
 const mapStateToProps = (state) => {
@@ -115,16 +173,7 @@ const mapStateToProps = (state) => {
     if (initEnabled == undefined || initEnabled == null)
       initEnabled = '0'
   } */
-  return { initialValues: { ...state.cForm.data,buildings:  [
-    {
-      "name": "A1",
-      "id": "196015270102325726"
-    },
-    {
-      "name": "xxxxxxx",
-      "id": "452070951882850304"
-    }
-  ]} }// 单选框选中状态必须为字符串，所以要将数字加引号
+  return { initialValues: { ...state.cForm.data},pid:state.cForm.data.pid}
 }
 
 EditDepartmentAndBuildingsForm = connect(

@@ -141,7 +141,7 @@ let EditBuildingForm = props => {
       <Field readOnly={readOnly}
         name="projectId"
         component={InlineField}
-        type="hidden"
+        type="text"
         label="楼盘名称"
       />
       <Field readOnly={readOnly}
@@ -316,10 +316,10 @@ const mapStateToProps = (state) => {
     assignRooms = cFormData._original.structure
   else if(cFormData != undefined && cFormData != null)
     assignRooms = cFormData.structure */
-    console.log(cFormData)
+/*    console.log(cFormData)*/
   let initialValues = {}
   if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
-    initialValues = { ...cFormData._original, category: "" + cFormData._original.category,projectId:''+cFormData._original.projectId} // 单选框选中状态必须为字符串，所以要将数字加引号
+    initialValues = { ...cFormData._original, category: "" + cFormData._original.category,projectId:""+cFormData._original.projectId} // 单选框选中状态必须为字符串，所以要将数字加引号
   /* else
     initialValues = { projectId:'196015270102325730' }  */// pull initial values from account reducer   
     console.log('###########################3')
@@ -328,13 +328,15 @@ const mapStateToProps = (state) => {
     if (assignRooms == undefined) 
     assignRooms = []
   
-  console.log(cFormData)
-  console.log(assignRooms)
+/*  console.log(cFormData)
+  console.log(assignRooms)*/
   // alert(assignRooms.length)
   const structureValue = selector(state, 'structure')
   const unitsValue = selector(state, 'units')
   const floorsValue = selector(state, 'floors')
   const roomsValue = selector(state, 'rooms')
+  console.log('==============================')
+  console.log(projectList);
   return { initialValues, assignRooms, structureValue, unitsValue, floorsValue, roomsValue, projectList }
 
 }

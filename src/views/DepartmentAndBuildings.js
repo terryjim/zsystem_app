@@ -103,6 +103,7 @@ class DepartmentAndBuildings extends Component {
   }
   submit = (values) => {
     console.log(values)
+    return null
     values.property = {id: values.property} 
      console.log(values)
     this.props.dispatch(saveForm(values, 'department'))

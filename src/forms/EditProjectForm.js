@@ -32,10 +32,10 @@ const renderAreas = ({ readOnly,fields, meta: { error, submitFailed } }) => (
       <InputGroup>
         <Field
           name={`${member}.id`}
-          type="hidden"
+          type="text"
           component={InputField}
           readOnly={readOnly}
-          label={null}
+          label={`${member}.id`}
         />
         {/* <Label>名称</Label> */}
        {/*  </Col>

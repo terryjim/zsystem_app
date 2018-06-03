@@ -1,5 +1,5 @@
 //判断返回状态码
-const checkStatus=response=>{
+export const checkStatus=response=>{
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
