@@ -136,6 +136,7 @@ class Department extends Component {
         onClick={
           e => {
             e.stopPropagation()
+               this.setState({selection:[c.row.id]})
             this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'))
           }
         }>

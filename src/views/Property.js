@@ -32,6 +32,7 @@ class Property extends Component {
       selectAll: false,
     };
   }
+  
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -129,6 +130,7 @@ class Property extends Component {
         onClick={
           e => {
             e.stopPropagation()
+            this.setState({selection:[c.row.id]})
             this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'))
           }
         }>
