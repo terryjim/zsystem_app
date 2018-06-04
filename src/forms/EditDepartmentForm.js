@@ -161,6 +161,7 @@ EditDepartmentForm = reduxForm({
   form: 'department', // a unique name for this form
   validate,                // redux-form同步验证 
 })(EditDepartmentForm);
+
 const mapStateToProps = (state) => {
   let propertyList = state.propertyList
   let projectList = state.projectList

@@ -22,7 +22,7 @@ const checkField = ({ readOnly, input, label, value, meta: { touched, error } })
           </Col>
         </FormGroup>
  )
-const buildingsField = ({ readOnly, fields, buildingList,meta: { error, submitFailed } }) =>{console.log(fields);return (
+/* const buildingsField = ({ readOnly, fields, buildingList,meta: { error, submitFailed } }) =>{console.log(fields);return (
 
   <Container>
    
@@ -51,7 +51,7 @@ const buildingsField = ({ readOnly, fields, buildingList,meta: { error, submitFa
     )})}
 
   </Container>
-)}
+)} */
 
 const validate = values => {
   console.log(values)
@@ -65,11 +65,16 @@ const validate = values => {
 
 let EditDepartmentAndBuildingsForm = props => {
   const {readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues,pid } = props;
-//const buildingList=initialValues.buildingList
+console.log(initialValues)
+  //const buildingList=initialValues.buildingList
  let getBuildings = (values) => {
     console.log('---------------------------------------')
     console.log(values)
-  
+    if(values!=undefined&&values!=null){
+    dispatch(change('EditDepartmentAndBuildingsForm', 'buildings', values.buildings))
+    }else{
+      dispatch(change('EditDepartmentAndBuildingsForm', 'buildings', []))
+    }
   }
   return (
     <form onSubmit={handleSubmit} >
@@ -93,7 +98,13 @@ let EditDepartmentAndBuildingsForm = props => {
         type="text"
         label="所属楼盘"
       />
-<BuildingsAllotTable name="buildings" pid={pid}  handleTableValues={getBuildings}/>
+<BuildingsAllotTable name="allotBuildings" pid={pid}  handleTableValues={getBuildings} allotBuildings={initialValues.buildings}/>
+<Field 
+        name="buildings"
+        component={InputField}
+        type="text"
+        label="分配楼栋"
+      />
 
  {/*<FieldArray name="building" component={buildingsField} readOnly={readOnly} buildingList={buildingList}  label="所辖楼栋1"  />*/}
 {/* <Container><FormGroup row>
@@ -160,7 +171,10 @@ EditDepartmentAndBuildingsForm = reduxForm({
 const mapStateToProps = (state) => {
   
   console.log(state.cForm.data)
- 
+  let buildings=[]
+  if (state.cForm.data != undefined && state.cForm.data != null&&state.cForm.data._original != undefined && state.cForm.data._original != null) {
+    buildings=state.cForm.data._original.buildings
+  }
 /* 
   if (state.cForm.data != undefined && state.cForm.data != null) {
     initEnabled = '' + state.cForm.data.enabled
@@ -173,7 +187,7 @@ const mapStateToProps = (state) => {
     if (initEnabled == undefined || initEnabled == null)
       initEnabled = '0'
   } */
-  return { initialValues: { ...state.cForm.data},pid:state.cForm.data.pid}
+  return { initialValues: { ...state.cForm.data,buildings},pid:state.cForm.data.pid}
 }
 
 EditDepartmentAndBuildingsForm = connect(

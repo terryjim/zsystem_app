@@ -26,9 +26,9 @@ class Project extends Component {
     this.state = {
       showEditProject: false,//显示修改表单
       showDanger: false,   //显示错误信息
-   /*    showProject: false,   */   
+      /*    showProject: false,   */
       selection: [],
-      edit:false,//是否为编辑状态
+      edit: false,//是否为编辑状态
       selectAll: false,
     };
   }
@@ -87,11 +87,11 @@ class Project extends Component {
     });
   }
   //切换查看窗口状态（开、闭）
-/*   toggleShowProject = () => {
-    this.setState({
-      showProject: !this.state.showProject,
-    });
-  } */
+  /*   toggleShowProject = () => {
+      this.setState({
+        showProject: !this.state.showProject,
+      });
+    } */
   //切换错误窗口状态（开、闭）  
   toggleShowDanger = () => {
     this.setState({
@@ -115,17 +115,17 @@ class Project extends Component {
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-edit" style={{fontSize:20,color:'#00adff',alignItems:'top'}}
+      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditProject: true,edit:true })
+            this.setState({ showEditProject: true, edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-trash-o" style={{fontSize:20,color:'#FF5722',alignItems:'top'}}
+      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             e.stopPropagation()
@@ -141,14 +141,14 @@ class Project extends Component {
   }, {
     id: 'address',
     accessor: d => {
-      let address=d.address
-      let ret=''
-      if(address!=undefined&&address.p!=undefined&&address.p!='')
-      ret+=address.p
-      if(address!=undefined&&address.c!=undefined&&address.c!='')
-      ret+=address.c
-      if(address!=undefined&&address.d!=undefined&&address.d!='')
-      ret+=address.d
+      let address = d.address
+      let ret = ''
+      if (address != undefined && address.p != undefined && address.p != '')
+        ret += address.p
+      if (address != undefined && address.c != undefined && address.c != '')
+        ret += address.c
+      if (address != undefined && address.d != undefined && address.d != '')
+        ret += address.d
       return ret
     },
     Header: '所在区域',
@@ -176,12 +176,13 @@ class Project extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditProject: true,edit:true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditProject: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
-          if(this.state.selection.length<1)
-          alert('请选择要删除的记录！') 
-          else 
-          this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del')); }}>删除</Button>
+          if (this.state.selection.length < 1)
+            alert('请选择要删除的记录！')
+          else
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del'));
+        }}>删除</Button>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={projects.content}
           pages={projects.totalPages} columns={this.columns} defaultPageSize={10} filterable
           className="-striped -highlight"
@@ -190,7 +191,12 @@ class Project extends Component {
           onFetchData={(state, instance) => {
             let whereSql = ''
             state.filtered.forEach(
-              v => whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
+              v => {
+             /*    if (v.id === 'address')
+                  whereSql += ' and address=\'{\'p\':\''+ v.value + '\'}'
+                else */
+                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+              }
             )
 
             this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'project'))
@@ -207,7 +213,7 @@ class Project extends Component {
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditProject: true,edit:false })
+                  this.setState({ showEditProject: true, edit: false })
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
@@ -224,7 +230,7 @@ class Project extends Component {
           }
           {...checkboxProps}
         />
-       {/*  <div className="row">
+        {/*  <div className="row">
 
           <div className="col-lg-12">
             <div className="card">
@@ -233,14 +239,14 @@ class Project extends Component {
               </div>
               <div className="card-block"> */}
 
-                <TopModal isOpen={this.state.showEditProject} toggle={() => this.toggleShowEditProject()}
-                  className={'modal-primary ' + this.props.className}>
-                  <ModalHeader toggle={() => this.toggleShowEditProject()}>楼盘信息</ModalHeader>
-                  <ModalBody>
-                    <EditProjectForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditProject}/>
-                  </ModalBody>
-                </TopModal>
-               {/*  <TopModal isOpen={this.state.showProject} toggle={() => this.toggleShowProject()}
+        <TopModal isOpen={this.state.showEditProject} toggle={() => this.toggleShowEditProject()}
+          className={'modal-primary ' + this.props.className}>
+          <ModalHeader toggle={() => this.toggleShowEditProject()}>楼盘信息</ModalHeader>
+          <ModalBody>
+            <EditProjectForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditProject} />
+          </ModalBody>
+        </TopModal>
+        {/*  <TopModal isOpen={this.state.showProject} toggle={() => this.toggleShowProject()}
                   className={'modal-primary ' + this.props.className}>
                   <ModalHeader toggle={() => this.toggleShowProject()}>查看记录</ModalHeader>
                   <ModalBody>
@@ -250,7 +256,7 @@ class Project extends Component {
                     <Button color="primary" onClick={this.toggleShowProject}>关闭</Button>
                   </ModalFooter>
                 </TopModal> */}
-              {/* </div>
+        {/* </div>
             </div>
           </div>
         </div> */}

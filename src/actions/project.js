@@ -27,6 +27,8 @@ export const getProjectList = () =>dispatch=> {
 }
 //新增或修改后的记录更新列表
 export const fillProjectList = (values) => {
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
+    console.log(values)
     return {
         type: 'FILL_PROJECT_LIST',
         data: values

@@ -13,8 +13,10 @@ let sample = [
 ]
 const projectList = (state = [], action) => {
     if (action.type === 'FILL_PROJECT_LIST') {
+       
         if (action.data != null)
             state = [].concat(action.data)
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(state)
     }    
     return state;

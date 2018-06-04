@@ -7,8 +7,10 @@ const TParams = {
         /* get_project_list: defaultUrl + 'project/getByPage',
         save_project: defaultUrl + 'project/save',
         del_project: defaultUrl + 'project/del', */
-       get_department_buildings_list:defaultUrl + 'department/getDepartmentsAndBuildings',
-       getBuildingsByProject:defaultUrl + 'building/getBuildingsByProject',    
+       get_department_buildings_list:defaultUrl + 'department/getDepartmentsAndBuildings', //视图v_building获取楼盘、楼栋、物业、项目部信息列表
+       getBuildingsByProject:defaultUrl + 'building/getBuildingsByProject',  //根据楼盘id获取所辖楼栋列表
+       allotBuildings :defaultUrl + 'building/allot', //绑定楼栋－－物业项目部
+     
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',
         get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置

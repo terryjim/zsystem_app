@@ -25,6 +25,12 @@ constructor(props) {
   }
   componentDidMount(){
     //this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
+    let buildings=this.props.allotBuildings
+    console.log(buildings)
+    if(buildings!=undefined){
+    let allotBuildings=buildings.map(x=>x.id)
+    this.setState({selection:allotBuildings})
+    }
   }
   componentDidUpdate(){
     this.props.handleTableValues({ buildings: this.state.selection })
@@ -121,7 +127,7 @@ constructor(props) {
        columns={this.columns} 
           className="-striped -highlight"
           resizable={false}
-        minRows={1}
+        minRows={3}
         defaultPageSize={999}
         noDataText='无数据'    
           getTrProps={

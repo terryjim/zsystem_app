@@ -13,6 +13,7 @@ let sample = [
 ]
 const buildingList = (state = [], action) => {
     if (action.type === 'FILL_BUILDING_LIST') {
+        console.log(action.data)
         if (action.data != null) {
             state = []
             action.data.forEach(member =>

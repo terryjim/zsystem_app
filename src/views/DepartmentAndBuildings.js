@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
+import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList,clearEditedIds } from '../actions/common'
 import { getPropertyList } from '../actions/property'
-import { clearEditedIds } from '../actions/common'
+import {allotBuildings} from '../actions/building'
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditDepartmentAndBuildingsForm from '../forms/EditDepartmentAndBuildingsForm'
 import TopModal from '../components/TopModal'
@@ -103,10 +103,11 @@ class DepartmentAndBuildings extends Component {
   }
   submit = (values) => {
     console.log(values)
-    return null
-    values.property = {id: values.property} 
-     console.log(values)
-    this.props.dispatch(saveForm(values, 'department'))
+    //return null
+    //values.property = {id: values.property} 
+   // console.log(values)
+     //values.id:项目部id，values.buildings:分配楼栋列表
+    this.props.dispatch(allotBuildings(values.id, values.buildings))
     this.setState({ showEditDepartment: false })
   }
   columns = [{
