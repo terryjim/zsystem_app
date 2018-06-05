@@ -150,7 +150,11 @@ class Building extends Component {
   }, {
     id: 'projectName',
     Header: '楼盘名称',
-    accessor: d => this.props.projectList.filter(p=>p.id===d.projectId)[0].name
+    accessor: d =>{
+      let pj= this.props.projectList.filter(p=>p.id===d.projectId)
+      if(pj.length>0)
+      return pj[0].name  
+    }   
   }, {
     accessor: 'projectId',
     Header: '楼盘ID',
