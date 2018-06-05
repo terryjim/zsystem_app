@@ -152,7 +152,7 @@ let EditBuildingForm = props => {
       <Field readOnly={readOnly}
         name="projectId"
         component={InputField}
-        type="hidden"
+        type="text"
         label="楼盘名称"
       // parse={(value, name)=>({property:{id:value}})}
       // normalize={value=>({id:value})}

@@ -77,11 +77,23 @@ const cList = (state = {}, action) => {
         }
     }
     //分配楼栋后更新列表
+    //action.data: {id:'',buildings:[]}
     if (action.type === 'ALLOT_BUILDINGS_MODIFY_GRID') {
         if (action.data != null) {
-            //返回值id(项目部）,buildings（分配楼栋数组）  
-            let index = state.content.findIndex(v => v.propertyProjectId === action.data.id)
-            state.content[index].buildings = action.data.buildings
+            let buildings=action.data.buildings
+            //解除原来绑定buildings信息           
+            state.content.map(s=>{
+                if(s.buildings!=undefined){
+                s.buildings=s.buildings.filter(item=>{
+                    //若项目部buildings列表中包含等分配楼栋id则删除
+                    return buildings.indexOf(item.id)<0})
+                }
+            })
+            //返回值id(项目部）,buildings（分配楼栋数组）            
+            let index = state.content.findIndex(v => v.id === action.data.id)
+            if (index > -1) {
+                state.content[index].buildings = buildings.map(x=>({id:x})) 
+            }
             state = Object.assign({}, state)
         }
     }

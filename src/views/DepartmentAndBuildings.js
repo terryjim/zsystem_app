@@ -146,12 +146,19 @@ class DepartmentAndBuildings extends Component {
     //width: 400,
     id: 'pid',
     accessor: d => d.property == undefined ? '' : d.property.id,
-    //show: false,
+    show: false,
   }, {
     accessor: 'name',
     Header: '项目部名称',
     width: 300,
   }, {
+   // accessor: 'buildings',
+   id:'buildings',
+   Header: '楼栋名称',
+   width: 500,   
+   accessor: d => JSON.stringify(d.buildings),
+   show: false
+ }, {
      accessor: 'projectName',
     Header: '楼盘名称',
     width: 300,   
@@ -164,7 +171,7 @@ class DepartmentAndBuildings extends Component {
     //width: 400,
     id: 'pid',
     //accessor: d => d.property == undefined ? '' : d.property.id,
-    //show: false,
+    show: false,
   },  /*{
     //accessor: 'enabled',
     id:'enabled',
@@ -251,7 +258,7 @@ class DepartmentAndBuildings extends Component {
 //获取Department记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let Departments = state.cList
-
+  //alert(JSON.stringify(Departments ))
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'department' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   return { Departments, editedIds, confirmDel }

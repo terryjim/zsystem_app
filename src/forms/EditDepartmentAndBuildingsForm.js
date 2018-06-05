@@ -102,7 +102,7 @@ console.log(initialValues)
 <Field 
         name="buildings"
         component={InputField}
-        type="text"
+        type="hidden"
         label="分配楼栋"
       />
 
