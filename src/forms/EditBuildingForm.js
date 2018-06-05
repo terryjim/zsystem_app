@@ -152,7 +152,7 @@ let EditBuildingForm = props => {
       <Field readOnly={readOnly}
         name="projectId"
         component={InputField}
-        type="text"
+        type="hidden"
         label="楼盘名称"
       // parse={(value, name)=>({property:{id:value}})}
       // normalize={value=>({id:value})}
@@ -331,6 +331,7 @@ EditBuildingForm = reduxForm({
 const selector = formValueSelector('building')
 const mapStateToProps = (state) => {
   let projectList = state.projectList
+ 
   let cFormData = state.cForm.data
   let assignRooms = state.assignRooms
   let initialValues = {}

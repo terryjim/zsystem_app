@@ -156,7 +156,7 @@ class Department extends Component {
     //width: 400,
     id: 'pid',
     accessor: d => d.property == undefined ? '' : d.property.id,
-    //show: false,
+    show: false,
   }, {
     accessor: 'name',
     Header: '项目部名称',

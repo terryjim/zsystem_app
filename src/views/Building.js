@@ -130,6 +130,7 @@ class Building extends Component {
         onClick={
           (e) => {
             e.stopPropagation()
+            this.setState({selection:[c.row.id]})
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditBuilding: true, edit: true })
           }
@@ -140,31 +141,21 @@ class Building extends Component {
         onClick={
           e => {
              e.stopPropagation()
-            //this.setState({selection:[c.row.id]})
+            this.setState({selection:[c.row.id]})
             this.props.dispatch(showConfirm('是否删除选中记录？', 'building', 'del'))
           }
         }>
       </a>
     </div>)
   }, {
-    accessor: 'projectName',
+    id: 'projectName',
     Header: '楼盘名称',
-
-  },/*  {
-    id: 'address',
-    accessor: d => {
-      let address = d.address
-      let ret = ''
-      if (address.p != undefined && address.p != '')
-        ret += address.p
-      if (address.c != undefined && address.c != '')
-        ret += address.c
-      if (address.d != undefined && address.d != '')
-        ret += address.d
-      return ret
-    },
-    Header: '所在区域',
-  }, */ {
+    accessor: d => this.props.projectList.filter(p=>p.id===d.projectId)[0].name
+  }, {
+    accessor: 'projectId',
+    Header: '楼盘ID',
+    show: false,
+  }, {
     accessor: 'name',
     Header: '楼栋名称',
 
@@ -223,6 +214,7 @@ class Building extends Component {
               }
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
+                  this.setState({selection:[rowInfo.row.id]})
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditBuilding: true, edit: false })
                 },
@@ -282,6 +274,7 @@ const mapStateToProps = (state) => {
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'building' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   let projectList = state.projectList
+ /*  alert('1:'+JSON.stringify(projectList))
   if (buildings.content != undefined)
     buildings.content.map(b => {
       //如果没有projectName值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
@@ -291,6 +284,7 @@ const mapStateToProps = (state) => {
           b.projectName = proj.name
       }
     })
+    alert('2:'+JSON.stringify(projectList)) */
     console.log(buildings)
   return { buildings, editedIds, confirmDel, projectList }
 }
