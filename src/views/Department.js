@@ -4,6 +4,7 @@ import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from 
 import { getPropertyList } from '../actions/property'
 import { getProjectList } from '../actions/project';
 import { clearEditedIds } from '../actions/common'
+import {initPassword} from '../actions/department'
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditDepartmentForm from '../forms/EditDepartmentForm'
 import TopModal from '../components/TopModal'
@@ -21,6 +22,9 @@ class Department extends Component {
     //确认删除记录操作    
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'department'))
+    }
+    if(nextProps.confirmInitPassword){
+      this.props.dispatch(initPassword(this.state.selection[0]))
     }
   }
   constructor(props) {
@@ -105,9 +109,9 @@ class Department extends Component {
   }
   submit = (values) => {
     console.log(values)
-    values.property = {id: values.property} 
-    values.project={id:values.project}
-     console.log(values)
+    values.property = { id: values.property }
+    values.project = { id: values.project }
+    console.log(values)
     this.props.dispatch(saveForm(values, 'department'))
     this.setState({ showEditDepartment: false })
   }
@@ -119,13 +123,14 @@ class Department extends Component {
   }, {
     Header: '',
     sortable: false,
-    width: 60,
+    width: 80,
     filterable: false,
     Cell: (c) => (<div>
       <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
+            this.setState({ selection: [c.row.id] })
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditDepartment: true, edit: true })
           }
@@ -136,8 +141,18 @@ class Department extends Component {
         onClick={
           e => {
             e.stopPropagation()
-               this.setState({selection:[c.row.id]})
+            this.setState({ selection: [c.row.id] })
             this.props.dispatch(showConfirm('是否删除选中记录？', 'department', 'del'))
+          }
+        }>
+      </a>
+      &nbsp;
+      <a className="fa fa-user-o" style={{ fontSize: 20, color: '#8bc34a', alignItems: 'top' }}
+        onClick={
+          e => {
+            e.stopPropagation()
+            this.setState({ selection: [c.row.id] })
+            this.props.dispatch(showConfirm('是否重新初始化项目部管理员密码？', 'department', 'initPassword'))
           }
         }>
       </a>
@@ -167,8 +182,8 @@ class Department extends Component {
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
   }, {
-   // accessor: 'projectName',
-   id:'project',
+    // accessor: 'projectName',
+    id: 'project',
     Header: '所属楼盘',
     accessor: d => d.project == undefined ? '' : d.project.name,
     width: 200
@@ -274,7 +289,8 @@ const mapStateToProps = (state) => {
 
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'department' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { Departments, editedIds, confirmDel }
+  let confirmInitPassword = state.confirm.module === 'department' && state.confirm.operate === 'initPassword' ? state.confirm.confirm : false
+ return { Departments, editedIds, confirmDel ,confirmInitPassword}
 }
 
 
