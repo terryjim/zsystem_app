@@ -36,12 +36,7 @@ class Building extends Component {
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'building'))
     }
-  } componentWillReceiveProps(nextProps) {
-    //确认删除记录操作    
-    if (nextProps.confirmDel) {
-      this.props.dispatch(delList(this.state.selection, 'building'))
-    }
-  }
+  } 
 
   toggleSelection = (key, shift, row) => {
     /* 
