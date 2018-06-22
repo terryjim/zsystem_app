@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { Redirect,HashRouter, Route, Switch } from 'react-router-dom'
 import './App.css';
 // Styles
 // CoreUI Icons Set
@@ -32,13 +32,7 @@ const store = createStore(reducers, undefined,
   ))
 //store.dispatch(getOss())
 //setInterval(() => store.dispatch(getOss()), 1000 * 60 * 30)   //定时获取oss信息
-class App extends Component {
- /*  componentWillMount() {    
-    if (window.sessionStorage.accessToken == null||window.sessionStorage.accessToken ==undefined||window.sessionStorage.accessToken ==='') {
-      //alert(history)
-      return <Redirect push to="/login" />
-    }
-  } */
+class App extends Component { 
   render() {
     return (
       <Provider store={store}>

@@ -32,7 +32,10 @@ class RoomEditableTable extends React.Component {
         suppressContentEditableWarning
         onBlur={e => {
           const data = [...this.state.data];
-          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          let rooms=e.target.innerHTML
+          let roomArray=rooms.split(',')
+          //data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          data[cellInfo.index][cellInfo.column.id] = roomArray;
           this.setState({ data });
         }}
         dangerouslySetInnerHTML={{

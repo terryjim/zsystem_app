@@ -36,7 +36,7 @@ class Building extends Component {
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'building'))
     }
-  } 
+  }
 
   toggleSelection = (key, shift, row) => {
     /* 
@@ -104,9 +104,10 @@ class Building extends Component {
       showDanger: !this.state.showDanger,
     });
   }
-  submit = (values) => {
+  submit = (values) => {  
+    
     console.log(values)
-
+    console.log(JSON.stringify(values))   
     this.props.dispatch(saveForm(values, 'building'))
     this.setState({ showEditBuilding: false })
   }
@@ -125,7 +126,7 @@ class Building extends Component {
         onClick={
           (e) => {
             e.stopPropagation()
-            this.setState({selection:[c.row.id]})
+            this.setState({ selection: [c.row.id] })
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditBuilding: true, edit: true })
           }
@@ -135,8 +136,8 @@ class Building extends Component {
       <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
-             e.stopPropagation()
-            this.setState({selection:[c.row.id]})
+            e.stopPropagation()
+            this.setState({ selection: [c.row.id] })
             this.props.dispatch(showConfirm('是否删除选中记录？', 'building', 'del'))
           }
         }>
@@ -145,11 +146,11 @@ class Building extends Component {
   }, {
     id: 'projectName',
     Header: '楼盘名称',
-    accessor: d =>{
-      let pj= this.props.projectList.filter(p=>p.id===d.projectId)
-      if(pj.length>0)
-      return pj[0].name  
-    }   
+    accessor: d => {
+      let pj = this.props.projectList.filter(p => p.id === d.projectId)
+      if (pj.length > 0)
+        return pj[0].name
+    }
   }, {
     accessor: 'projectId',
     Header: '楼盘ID',
@@ -213,7 +214,7 @@ class Building extends Component {
               }
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
-                  this.setState({selection:[rowInfo.row.id]})
+                  this.setState({ selection: [rowInfo.row.id] })
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditBuilding: true, edit: false })
                 },
@@ -273,18 +274,18 @@ const mapStateToProps = (state) => {
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'building' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   let projectList = state.projectList
- /*  alert('1:'+JSON.stringify(projectList))
-  if (buildings.content != undefined)
-    buildings.content.map(b => {
-      //如果没有projectName值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
-      if (b.projectName == undefined || b.projectName == null || b.projectName == '') {
-        let proj = projectList.find(v => v.id = b.projectId)
-        if (proj != null)
-          b.projectName = proj.name
-      }
-    })
-    alert('2:'+JSON.stringify(projectList)) */
-    console.log(buildings)
+  /*  alert('1:'+JSON.stringify(projectList))
+   if (buildings.content != undefined)
+     buildings.content.map(b => {
+       //如果没有projectName值说明是保存后添加到列表上的数据，需根据楼盘ＩＤ手动查询楼盘名称
+       if (b.projectName == undefined || b.projectName == null || b.projectName == '') {
+         let proj = projectList.find(v => v.id = b.projectId)
+         if (proj != null)
+           b.projectName = proj.name
+       }
+     })
+     alert('2:'+JSON.stringify(projectList)) */
+  console.log(buildings)
   return { buildings, editedIds, confirmDel, projectList }
 }
 

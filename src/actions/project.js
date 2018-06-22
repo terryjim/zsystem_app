@@ -4,7 +4,7 @@ export const getProjectList = () =>dispatch=> {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
-    //headers.Authorization = WebIM.config.tokenLocal
+    headers.Authorization = window.sessionStorage.accessToken  
     //console.log(values)
     //let body = JSON.stringify(values)
     //let body = values

@@ -33,9 +33,9 @@ import ErrModal from '../../components/ErrModal'
 import ConfirmModal from '../../components/ConfirmModal'
 class DefaultLayout extends Component {
   render() {    
-   /*  if (window.sessionStorage.accessToken == null || window.sessionStorage.accessToken == undefined || window.sessionStorage.accessToken === '') {
+    if (window.sessionStorage.accessToken == null || window.sessionStorage.accessToken == undefined || window.sessionStorage.accessToken === '') {
       return <Redirect push to="/login" />
-    } else  */{
+    } else {
       return (
         <div className="app">
           <AppHeader fixed>

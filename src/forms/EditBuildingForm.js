@@ -68,14 +68,17 @@ const validate = values => {
   if (!values.category) {
     errors.category = '楼栋类型不能为空'
   }
-  if (isNaN(Number(values.units))) {
+  if (values.units!=undefined&&isNaN(Number(values.units))) {
     errors.units = '单元必须为整数'
   }
-  if (isNaN(Number(values.floors))) {
+  if (values.floors!=undefined&&isNaN(Number(values.floors))) {
     errors.floors = '楼层必须为整数'
   }
-  if (isNaN(Number(values.rooms))) {
+  if (values.rooms!=undefined&&isNaN(Number(values.rooms))) {
     errors.rooms = '楼层房间数必须为整数'
+  }
+  if (!values.structure) {
+    errors.structure = '楼栋结构不得为空'
   }
   return errors
 }
@@ -220,27 +223,28 @@ let EditBuildingForm = props => {
           <label >单元数量&nbsp;&nbsp;</label>
           <Field readOnly={readOnly}
             name="units"
-            component='input'
+            component={InlineField}
             type="text"
             style={{ 'width': 100 }}
-            validate={[number]}
+           
           />
         </Col><Col>
             <label >楼层数量&nbsp;&nbsp;</label>
             <Field readOnly={readOnly}
               name="floors"
-              component='input'
+              component={InlineField}
               type="text"
               style={{ 'width': 100 }}
-              validate={[number]}
+            
+             
             /></Col><Col>
             <label >楼层房间数&nbsp;&nbsp;</label>
             <Field readOnly={readOnly}
               name="rooms"
-              component='input'
+              component={InlineField}
               type="text"
               style={{ 'width': 100 }}
-              validate={[number]}
+            
             />  </Col><Col>
             <Button block color="primary" hidden={readOnly} onClick={(values) => {
               console.log(values)

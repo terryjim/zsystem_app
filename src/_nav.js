@@ -1,76 +1,68 @@
 export default {
   items: [
-   /*  {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
-    },
- */
-  
+    /*  {
+       name: 'Dashboard',
+       url: '/dashboard',
+       icon: 'icon-speedometer',
+       badge: {
+         variant: 'info',
+         text: 'NEW',
+       },
+     },
+  */
+
 
     {
       title: true,
       name: '楼盘管理',
       wrapper: {            // optional wrapper object
-        element: '楼盘管理',        // required valid HTML5 element tag
-        attributes: {style: {fontSize: 15,color:"#8bc34a"}}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+        element: 'div',     // required valid HTML5 element tag
+        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
-      //url: '/base',
-     // icon: 'icon-globe',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      class: '' ,  */           // optional class names space delimited list for title item ex: "text-center"
-      //class: 'h3' 
-    },  
-        {
-          name: '楼盘设置',
-          url: '/project/project',
-          icon: 'icon-layers',
-        },
-        {
-          name: '楼栋设置',
-          url: '/project/building',
-          icon: 'icon-chart',
-        }     
-   ,
-  
+    },
+    {
+      name: '楼盘设置',
+      url: '/project/project',
+      icon: 'icon-layers',
+    },
+    {
+      name: '楼栋设置',
+      url: '/project/building',
+      icon: 'icon-chart',
+    }
+    ,
+
     {
       title: true,
       name: '物业公司管理',
       wrapper: {            // optional wrapper object
-        element: '物业公司管理',        // required valid HTML5 element tag
-        attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+        element: 'div',        // required valid HTML5 element tag
+        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       //url:'/theme',
       /* wrapper: {            // optional wrapper object
         element: '',        // required valid HTML5 element tag
         attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       }, */
-     // icon: 'icon-energy',
+      // icon: 'icon-energy',
       //class: '',             // optional class names space delimited list for title item ex: "text-center"
     },
-      {
-        name: '物业公司设置',
-        url: '/property/setting',
-        icon: 'icon-settings',
-      },
-      {
-        name: '项目部设置',
-        url: '/property/department',
-        icon: 'icon-location-pin',
-      },{
-        name: '物业楼盘分配',
-        url: '/property/allot',
-        icon: 'icon-equalizer',
-      },
-    
-    
+    {
+      name: '物业公司设置',
+      url: '/property/setting',
+      icon: 'icon-settings',
+    },
+    {
+      name: '项目部设置',
+      url: '/property/department',
+      icon: 'icon-location-pin',
+    }, {
+      name: '物业楼盘分配',
+      url: '/property/allot',
+      icon: 'icon-equalizer',
+    },
+
+/* 
     {
       title: true,
       name: 'Theme',
@@ -316,8 +308,8 @@ export default {
           icon: 'icon-star',
         },
       ],
-    },
-    {
+    }, */
+   /*  {
       name: 'Download CoreUI',
       url: 'http://coreui.io/react/',
       icon: 'icon-cloud-download',
@@ -329,7 +321,7 @@ export default {
       url: 'http://coreui.io/pro/react/',
       icon: 'icon-layers',
       variant: 'danger',
-    },
-   
+    }, */
+
   ],
 };
