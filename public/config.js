@@ -19,7 +19,8 @@ const TParams = {
         getProjectList:defaultUrl +'project/getList',//获取楼盘列表
         getPropertyList:defaultUrl +'property/getList',//获取物业公司列表
         initPassword:defaultUrl+'department/initPassword'//重新初始化项目部管理员密码
-    }
+    },
+    manufacturers:[{'id':1,'name':'平冶'},{'id':2,'name':'智果'}]
 }
 window.TParams = TParams
 

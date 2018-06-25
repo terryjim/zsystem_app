@@ -17,10 +17,10 @@ export const InputField = ({ readOnly, input, label, type, meta: { touched, erro
    <Input type="text" invalid id="inputIsInvalid" />
    <FormFeedback>Houston, we have a problem...</FormFeedback> */
 )
-export const InlineField = ({ readOnly, input, label, type, meta: { touched, error } }) => ( 
+export const InlineField = ({ readOnly, input, label, type,sm, meta: { touched, error } }) => ( 
   <Container><FormGroup row>
-      <Label sm={2} hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
-      <Col sm={10}><Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
+      <Label sm={sm===undefined?2:sm} hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
+      <Col sm={sm===undefined?10:12-sm}><Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
       {touched && error && <FormFeedback>{error}</FormFeedback>} 
       </Col>   
    </FormGroup>

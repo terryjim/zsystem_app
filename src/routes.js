@@ -26,6 +26,14 @@ const DepartmentAndBuildings= Loadable({
   loader: () => import('./views/DepartmentAndBuildings'),
   loading: Loading,
 })
+const AccessControl= Loadable({
+  loader: () => import('./views/AccessControl'),
+  loading: Loading,
+})
+const AccessHardware= Loadable({
+  loader: () => import('./views/AccessHardware'),
+  loading: Loading,
+})
 
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
@@ -205,7 +213,9 @@ const routes = [
   { path: '/property/setting', name: '物业公司设置', component: Property },
   { path: '/property/department', name: '项目部设置', component: Department },
   { path: '/property/allot', name: '物业楼盘分配', component: DepartmentAndBuildings }, 
-
+  { path: '/accessControl/setting', name: '硬件参数设置', component: AccessHardware }, 
+  { path: '/accessControl/allot', name: '门禁分配', component: AccessControl }, 
+ 
 
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   { path: '/theme/colors', name: '楼盘管理', component: Project },
