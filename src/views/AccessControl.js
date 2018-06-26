@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditProjectForm from '../forms/EditProjectForm'
+import EditAccessControlForm from '../forms/EditAccessControlForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-
+import { getProjectList } from '../actions/project';
 const CheckboxTable = checkboxHOC(ReactTable);
-class Project extends Component {
+class AccessControl extends Component {
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
@@ -18,15 +18,17 @@ class Project extends Component {
   componentWillReceiveProps(nextProps) {
     //确认删除记录操作    
     if (nextProps.confirmDel) {
-      this.props.dispatch(delList(this.state.selection, 'project'))
+      this.props.dispatch(delList(this.state.selection, 'accessControl'))
     }
   }
   constructor(props) {
     super(props);
+    //初始化楼盘选择列表（表单下拉框）
+    props.dispatch(getProjectList())
     this.state = {
-      showEditProject: false,//显示修改表单
+      showEditAccessControl: false,//显示修改表单
       showDanger: false,   //显示错误信息
-      /*    showProject: false,   */
+      /*    showAccessControl: false,   */
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
@@ -81,15 +83,15 @@ class Project extends Component {
     return this.state.selection.includes(key);
   };
   //切换编辑窗口状态（开、闭）
-  toggleShowEditProject = () => {
+  toggleShowEditAccessControl = () => {
     this.setState({
-      showEditProject: !this.state.showEditProject,
+      showEditAccessControl: !this.state.showEditAccessControl,
     });
   }
   //切换查看窗口状态（开、闭）
-  /*   toggleShowProject = () => {
+  /*   toggleShowAccessControl = () => {
       this.setState({
-        showProject: !this.state.showProject,
+        showAccessControl: !this.state.showAccessControl,
       });
     } */
   //切换错误窗口状态（开、闭）  
@@ -101,8 +103,8 @@ class Project extends Component {
   submit = (values) => {
     console.log(values)
 
-    this.props.dispatch(saveForm(values, 'project'))
-    this.setState({ showEditProject: false })
+    this.props.dispatch(saveForm(values, 'accessControl'))
+    this.setState({ showEditAccessControl: false })
   }
   columns = [{
     accessor: 'id',
@@ -120,7 +122,7 @@ class Project extends Component {
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditProject: true, edit: true })
+            this.setState({ showEditAccessControl: true, edit: true })
           }
         }>
       </a>
@@ -129,37 +131,82 @@ class Project extends Component {
         onClick={
           e => {
             e.stopPropagation()
-             this.setState({selection:[c.row.id]})
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del'))
+            this.setState({ selection: [c.row.id] })
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'accessControl', 'del'))
           }
         }>
       </a>
     </div>)
   }, {
-    accessor: 'name',
-    Header: '楼盘名称',
+    accessor: 'title',
+    Header: '位置名称',
 
   }, {
-    id: 'address',
-    accessor: d => {
-      let address = d.address
-      let ret = ''
-      if (address != undefined && address.p != undefined && address.p != '')
-        ret += address.p
-      if (address != undefined && address.c != undefined && address.c != '')
-        ret += address.c
-      if (address != undefined && address.d != undefined && address.d != '')
-        ret += address.d
-      return ret
-    },
-    Header: '所在区域',
+    accessor: 'name',
+    Header: '门禁名称',
+
+  }, {
+    id: 'publicControl',
+    Header: '授权类型',
+    accessor: d => d.publicControl == 1 ? '楼盘' : d.publicControl == 2 ? '楼栋' : d.publicControl == 4 ? '单元' : '',
+
+  },
+
+
+  {
+    accessor: 'projectName',
+    Header: '楼盘',
+
+  }, {
+    accessor: 'buildingName',
+    Header: '楼栋',
+
+  }, {
+    accessor: 'projectId',
+    Header: '楼盘id',
+
+  }, {
+    accessor: 'buildingId',
+    Header: '楼栋id',
+
   }, {
     id: 'category',
-    accessor: d => d.category == 1 ? '社区' : d.category == 2 ? '商办' : d.category == 3 ? '社区与商办' : '',
-    Header: '楼盘类型',
+    accessor: d => d.category == 1 ? '蓝牙' : d.category == 2 ? '二维码' : d.category == 3 ? '蓝牙及二维码' : '',
+    Header: '硬件类型',
   }, {
-    accessor: 'remark',
-    Header: '备注',
+    accessor: 'hardwareCode',
+    Header: '硬件编号',
+
+  }, {
+    accessor: 'hardwareVer',
+    Header: '硬件版本',
+
+  }, {
+    accessor: 'hardwareMac',
+    Header: '硬件MAC地址',
+
+  }, {
+    accessor: 'hardwareKey',
+    Header: '硬件密码',
+
+  }, {
+    id: 'manufacturer',
+    Header: '制造商',
+    accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : 'XXX',
+
+
+  },/*  {
+    accessor: 'shakeRssi',
+    Header: '摇一摇距离',
+
+  }, {
+    accessor: 'nearRssi',
+    Header: '靠近距离',
+
+  },  */{
+    accessor: 'hardwareCode',
+    Header: '硬件编号',
+
   }
   ];
 
@@ -173,34 +220,34 @@ class Project extends Component {
       toggleAll,
       selectType: "checkbox",
     };
-    let projects = this.props.projects
+    let accessControls = this.props.accessControls
 
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditProject: true, edit: true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditAccessControl: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
           else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del'));
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'accessControl', 'del'));
         }}>删除</Button>
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={projects.content}
-          pages={projects.totalPages} columns={this.columns} defaultPageSize={10} filterable
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={accessControls.content}
+          pages={accessControls.totalPages} columns={this.columns} defaultPageSize={10} filterable
           className="-striped -highlight"
-          /* onPageChange={(pageIndex) => this.props.dispatch(getProject({page:pageIndex,size:10}))}  */
+          /* onPageChange={(pageIndex) => this.props.dispatch(getAccessControl({page:pageIndex,size:10}))}  */
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           onFetchData={(state, instance) => {
             let whereSql = ''
             state.filtered.forEach(
               v => {
-             /*    if (v.id === 'address')
-                  whereSql += ' and address=\'{\'p\':\''+ v.value + '\'}'
-                else */
-                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+                /*    if (v.id === 'address')
+                     whereSql += ' and address=\'{\'p\':\''+ v.value + '\'}'
+                   else */
+                whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
             )
 
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'project'))
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'accessControl'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -214,7 +261,7 @@ class Project extends Component {
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditProject: true, edit: false })
+                  this.setState({ showEditAccessControl: true, edit: false })
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
@@ -240,21 +287,21 @@ class Project extends Component {
               </div>
               <div className="card-block"> */}
 
-        <TopModal isOpen={this.state.showEditProject} toggle={() => this.toggleShowEditProject()}
+        <TopModal isOpen={this.state.showEditAccessControl} toggle={() => this.toggleShowEditAccessControl()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditProject()}>楼盘信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditAccessControl()}>楼盘信息</ModalHeader>
           <ModalBody>
-            <EditProjectForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditProject} />
+            <EditAccessControlForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditAccessControl} />
           </ModalBody>
         </TopModal>
-        {/*  <TopModal isOpen={this.state.showProject} toggle={() => this.toggleShowProject()}
+        {/*  <TopModal isOpen={this.state.showAccessControl} toggle={() => this.toggleShowAccessControl()}
                   className={'modal-primary ' + this.props.className}>
-                  <ModalHeader toggle={() => this.toggleShowProject()}>查看记录</ModalHeader>
+                  <ModalHeader toggle={() => this.toggleShowAccessControl()}>查看记录</ModalHeader>
                   <ModalBody>
-                    <EditProjectForm readOnly={true} />
+                    <EditAccessControlForm readOnly={true} />
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={this.toggleShowProject}>关闭</Button>
+                    <Button color="primary" onClick={this.toggleShowAccessControl}>关闭</Button>
                   </ModalFooter>
                 </TopModal> */}
         {/* </div>
@@ -265,17 +312,17 @@ class Project extends Component {
     )
   }
 }
-//获取project记录集及修改记录ＩＤ数组
+//获取accessControl记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
-  let projects = state.cList
-  console.log(projects)
+  let accessControls = state.cList
+  console.log(accessControls)
   let editedIds = state.editedIds
-  let confirmDel = state.confirm.module === 'project' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { projects, editedIds, confirmDel }
+  let confirmDel = state.confirm.module === 'accessControl' && state.confirm.operate === 'del' ? state.confirm.confirm : false
+  return { accessControls, editedIds, confirmDel }
 }
 
 
-Project = connect(
+AccessControl = connect(
   mapStateToProps
-)(Project)
-export default Project;
+)(AccessControl)
+export default AccessControl;

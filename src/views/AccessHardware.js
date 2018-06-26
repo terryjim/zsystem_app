@@ -163,7 +163,7 @@ class AccessHardware extends Component {
   }, {
     id: 'manufacturer',
     Header: '制造商',
-    accessor: d => d.manufacturer === 1 ? '平冶' : d.manufacturer === 2 ? '智果' : '',
+    accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : '',
 
 
   }, {
