@@ -3,9 +3,11 @@ import { Field, reduxForm, change, FieldArray, formValueSelector, getFormValues,
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { getBuildingsByProject,getPublicAreaByBuilding,getUnitByBuilding} from '../actions/building'
+import { getBuildingsByProject, getPublicAreaByBuilding, getUnitByBuilding } from '../actions/building'
 import { getPublicAreaByProject } from '../actions/project'
 import { InputField, InlineField } from '../components/field'
+import AccessControl from '../views/AccessControl';
+import SelectAccessHardware from '../views/SelectAccessHardware';
 
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
@@ -14,14 +16,17 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 
 const validate = values => {
   const errors = {}
-  if (!values.name) {
-    errors.name = '名称不能为空'
+  if (!values.title) {
+    errors.title = '名称不能为空'
   }
-  if (!values.category) {
-    errors.category = '类型不能为空'
+  if (!values.publicControl) {
+    errors.publicControl = '授权类型为空'
   }
-  if (!values.manufacturer) {
-    errors.manufacturer = '制造商不能为空'
+  if (!values.entranceType) {
+    errors.entranceType = '硬件类型不能为空'
+  }
+  if (!values.entranceDirection) {
+    errors.entranceDirection = '出入类型不能为空'
   }
   return errors
 }
@@ -47,6 +52,8 @@ let EditAccessControlForm = props => {
 
   return (
     <form onSubmit={handleSubmit} >
+      <Row>
+          <Col xs="12" sm="6">
       <Field name="id" component="input" type="hidden" label="id" />
 
       <Field readOnly={readOnly}
@@ -91,13 +98,76 @@ let EditAccessControlForm = props => {
             </FormGroup>
         </Col>
       </FormGroup>
-
       <Field readOnly={readOnly}
         name="publicControl"
-        component={InlineField}
+        component={InputField}
         type="text"
         label=""
-        sm="3"
+
+      />      <FormGroup row>
+        <Col md="3">
+          <Label>&nbsp;&nbsp;&nbsp;&nbsp;硬件类型</Label>
+        </Col>
+        <Col md="9">
+          <FormGroup check inline>
+            <Field className="form-check-input"
+              name="entranceType"
+              component="input"
+              type="radio"
+              value="1"
+            />{' '}
+            匝道{'  '}
+          </FormGroup>
+          <FormGroup check inline>
+            <Field className="form-check-input"
+              name="entranceType"
+              component="input"
+              type="radio"
+              value="2"
+            />{' '}
+            探头{'  '}
+          </FormGroup>
+
+        </Col>
+      </FormGroup>
+      <Field readOnly={readOnly}
+        name="entranceType"
+        component={InputField}
+        type="text"
+        label=""
+
+      />
+      <FormGroup row>
+        <Col md="3">
+          <Label>&nbsp;&nbsp;&nbsp;&nbsp;出入类型</Label>
+        </Col>
+        <Col md="9">
+          <FormGroup check inline>
+            <Field className="form-check-input"
+              name="entranceDirection"
+              component="input"
+              type="radio"
+              value="0"
+            />{' '}
+            入口{'  '}
+          </FormGroup>
+          <FormGroup check inline>
+            <Field className="form-check-input"
+              name="entranceDirection"
+              component="input"
+              type="radio"
+              value="1"
+            />{' '}
+            出口{'  '}
+          </FormGroup>
+        </Col>
+      </FormGroup>
+      <Field readOnly={readOnly}
+        name="entranceDirection"
+        component={InputField}
+        type="text"
+        label=""
+
       />
       <Container><FormGroup row>
         <Label sm={3} for="projectId">楼盘名称</Label>
@@ -206,6 +276,19 @@ let EditAccessControlForm = props => {
           关闭
         </button>
       </div> */}
+      </Col>
+      <Col xs="12" sm="6">
+            <Card>
+              <CardHeader>
+                <strong>门禁</strong>
+                <small> 选择</small>
+              </CardHeader>
+              <CardBody>
+               <SelectAccessHardware pid={initialValues.id}/>
+              </CardBody>
+            </Card>
+          </Col>
+      </Row>
     </form>
   );
 }
@@ -231,7 +314,7 @@ const mapStateToProps = (state) => {
   const publicControlValue = selector(state, 'publicControl')
   let initialValues = {}
   if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
-    initialValues = { ...cFormData._original, publicControl: "" + cFormData._original.publicControl, projectId: cFormData._original.projectId } // 单选框选中状态必须为字符串，所以要将数字加引号
+    initialValues = { ...cFormData._original, publicControl: "" + cFormData._original.publicControl, entranceDirection: "" + cFormData._original.entranceDirection, entranceType: "" + cFormData._original.entranceType, projectId: cFormData._original.projectId } // 单选框选中状态必须为字符串，所以要将数字加引号
   return { initialValues, projectList, buildingList, publicAreaList, projectValue, buildingValue, publicControlValue }
 }
 EditAccessControlForm = connect(

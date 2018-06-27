@@ -8,7 +8,7 @@ import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-import RoomEditableTable from '../components/RoomEditableTable.js'
+/* import RoomEditableTable from '../components/RoomEditableTable.js' */
 import { getProjectList } from '../actions/project';
 const CheckboxTable = checkboxHOC(ReactTable);
 

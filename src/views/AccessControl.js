@@ -173,7 +173,15 @@ class AccessControl extends Component {
     id: 'category',
     accessor: d => d.category == 1 ? '蓝牙' : d.category == 2 ? '二维码' : d.category == 3 ? '蓝牙及二维码' : '',
     Header: '硬件类型',
+  },  {
+    id: 'entranceType',
+    accessor: d => d.entranceType == 1 ? '匝道' : d.entranceType == 2 ? '探头' :'',
+    Header: '门禁类型',
   }, {
+    id: 'entranceDirection',
+    accessor: d => d.entranceDirection == 0 ? '入口' : d.entranceDirection == 1 ? '出口' :'',
+    Header: '出入类型',
+  },{
     accessor: 'hardwareCode',
     Header: '硬件编号',
 
@@ -287,9 +295,9 @@ class AccessControl extends Component {
               </div>
               <div className="card-block"> */}
 
-        <TopModal isOpen={this.state.showEditAccessControl} toggle={() => this.toggleShowEditAccessControl()}
+        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditAccessControl} toggle={() => this.toggleShowEditAccessControl()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditAccessControl()}>楼盘信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditAccessControl()}>门禁分配</ModalHeader>
           <ModalBody>
             <EditAccessControlForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditAccessControl} />
           </ModalBody>
