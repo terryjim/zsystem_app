@@ -5,9 +5,9 @@ export const checkStatus = response => {
     }
     if (response.status === 401)
         throw (new Error("对不起，您没有权限访问此资源！"))
-    else {        
+    else {
         const error = new Error(response.statusText);
-        error.response = response;       
+        error.response = response;
         throw error
     }
 }
@@ -50,11 +50,12 @@ export const closeConfirm = () => ({
     type: 'CLOSE_CONFIRM'
 })
 //显示成功信息
-export const showSuccess = (msg) =>{   
-    return({
-    type: 'SHOW_SUCCESS',
-    msg,
-})}
+export const showSuccess = (msg) => {
+    return ({
+        type: 'SHOW_SUCCESS',
+        msg,
+    })
+}
 //关闭成功信息
 export const closeSuccess = () => ({
     type: 'CLOSE_SUCCESS'
@@ -73,22 +74,22 @@ export const delList = (ids, module) => dispatch => {
     //关闭确认窗口
     dispatch(closeConfirm())
     let headers = { 'Content-Type': 'application/json' };
-    headers.Authorization = window.sessionStorage.accessToken  
+    headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(ids)
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     //如果配置文件中没有专门的删除api则采用约定api地址
     let delUrl = window.TParams.urls['del_' + module]
-    if (delUrl == undefined||delUrl === '')
+    if (delUrl == undefined || delUrl === '')
         delUrl = window.TParams.defaultUrl + module + '/del'
 
-        ///////////////////////////////////////////////////////////////////
-        //以下部分为测试用，后台API修改后删除些段
-      /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
-        dispatch(delFromGrid(ids, module))    //从列表中删除 
+    ///////////////////////////////////////////////////////////////////
+    //以下部分为测试用，后台API修改后删除些段
+    /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
+      dispatch(delFromGrid(ids, module))    //从列表中删除 
 return */
-  //以上部分为测试用，后台API修改后删除些段
-            ///////////////////////////////////////////////////////////////////
-    
+    //以上部分为测试用，后台API修改后删除些段
+    ///////////////////////////////////////////////////////////////////
+
     return fetch(delUrl, args).then(response => response.json())
         .then(json => {
             console.log(json)
@@ -98,7 +99,7 @@ return */
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
-                dispatch(showSuccess('成功删除'+json.data+'条记录！'))  //显示删除成功信息
+                dispatch(showSuccess('成功删除' + json.data + '条记录！'))  //显示删除成功信息
                 dispatch(delFromGrid(ids, module))    //从列表中删除 
             }
         }).catch(e => {
@@ -117,12 +118,12 @@ export const delFromGrid = (ids, module) => {
 //获取列表
 export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
-    headers.Authorization = window.sessionStorage.accessToken   
+    headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify({ whereSql, page, size, orderBy })
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')
-        getUrl = window.TParams.defaultUrl + module + '/getByPage'   
+        getUrl = window.TParams.defaultUrl + module + '/getByPage'
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
             console.log(json)
@@ -146,13 +147,13 @@ export const getListResult = (json) => (
 //保存管理员
 export const saveForm = (values, module) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
-    headers.Authorization = window.sessionStorage.accessToken     
+    headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(values)
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
-    let saveUrl = window.TParams.urls['save_' + module]
-    if (saveUrl ==undefined || saveUrl === '')
+    let saveUrl = window.TParams.urls['save_' + module] 
+    if (saveUrl === undefined || saveUrl === '')
         saveUrl = window.TParams.defaultUrl + module + '/save'
-        dispatch(loading())
+    dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {
             dispatch(loaded())

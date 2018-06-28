@@ -1,5 +1,5 @@
-//const defaultUrl = "http://localhost/"
-const defaultUrl = "http://192.168.10.153/"
+const defaultUrl = "http://localhost/"
+//const defaultUrl = "http://192.168.10.153/"
 const TParams = {
     defaultUrl,
     defaultPageSize:20,
@@ -10,6 +10,7 @@ const TParams = {
        get_department_buildings_list:defaultUrl + 'department/getDepartmentsAndBuildings', //视图v_building获取楼盘、楼栋、物业、项目部信息列表
        getBuildingsByProject:defaultUrl + 'building/getBuildingsByProject',  //根据楼盘id获取所辖楼栋列表
        allotBuildings :defaultUrl + 'building/allot', //绑定楼栋－－物业项目部
+       save_accessControl:defaultUrl+'accessControl/saveForm',
      /* 
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del', */

@@ -220,7 +220,7 @@ class Building extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    toggleSelection(rowInfo.row.id,null,rowInfo.row)
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })

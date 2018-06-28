@@ -101,10 +101,9 @@ class AccessControl extends Component {
     });
   }
   submit = (values) => {
-    console.log(values)
-
+   // console.log(values)    
     this.props.dispatch(saveForm(values, 'accessControl'))
-    this.setState({ showEditAccessControl: false })
+   // this.setState({ showEditAccessControl: false })
   }
   columns = [{
     accessor: 'id',
@@ -255,7 +254,7 @@ class AccessControl extends Component {
               }
             )
 
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'accessControl'))
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'vAccessControl'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -273,7 +272,7 @@ class AccessControl extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    toggleSelection(rowInfo.row.id,null,rowInfo.row)
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })

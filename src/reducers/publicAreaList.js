@@ -18,6 +18,21 @@ const publicAreaList = (state = [], action) => {
                 state = state.concat({ id: member.id, name: member.name })
             )
         }
+    } 
+     if (action.type === 'DEL_FROM_PUBLIC_AREA_LIST') {       
+        if (action.data != null) {
+            let newState = [...state];
+            action.data.map(d=>{
+                let keyIndex = state.indexOf(d);           
+                if (keyIndex >= 0) {              
+                    newState = [
+                    ...newState.slice(0, keyIndex),
+                    ...newState.slice(keyIndex + 1)
+                  ];
+                } 
+            })
+            state=[].concat(newState)            
+        }
     }
     return state;
 }

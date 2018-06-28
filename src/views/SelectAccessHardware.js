@@ -17,31 +17,47 @@ class SelectAccessHardware extends Component {
     // this.props.dispatch(getAccessHardwareList(this.props.pid))
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({data:nextProps.accessHardwares.content})
-    let content=nextProps.accessHardwares.content
-    if(content!=undefined){
-      let selection=[]
-      //选中原有绑定的硬件设备
-      content.map((c,index)=>{
-        if(c.accessControlId!=undefined&&c.accessControlId===this.props.pid){
-          selection.push(c.id);
-        }
-      })
-      alert(JSON.stringify(selection))
-      this.setState({ selection })
+    
+    if (this.state.data === undefined||nextProps.accessHardwares.content!=this.state.data) {
+      this.setState({ data: nextProps.accessHardwares.content })
+      let content = nextProps.accessHardwares.content
+      if (content != undefined) {
+        let selection = []
+        //选中原有绑定的硬件设备
+        content.map((c, index) => {
+          if (c.accessControlId != undefined && c.accessControlId === this.props.pid) {
+            selection.push(c.id);
+          }
+        })
+        this.setState({ selection })
+      }
     }
-  } 
+  }
   constructor(props) {
     super(props);
     this.state = {
+
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
       data: props.accessHardwares.content
     };
-  
-        
     this.renderEditable = this.renderEditable.bind(this);
+  }
+  componentDidUpdate() {
+    //将选中的记录传值给表单
+    let data = this.state.data
+    let selection = this.state.selection
+    if (data === undefined || selection === undefined || selection.length < 1) {
+      return this.props.handleTableValues(null)
+    }
+    let selHardwares = new Array()
+    data.map(d => {
+      if (this.state.selection.indexOf(d.id) > -1)
+        selHardwares.push({ id: d.id, name: d.name })
+    })
+
+    this.props.handleTableValues(selHardwares)
   }
   renderEditable(cellInfo) {
     return (
@@ -49,6 +65,10 @@ class SelectAccessHardware extends Component {
         style={{ backgroundColor: "#fafafa" }}
         contentEditable
         suppressContentEditableWarning
+        onClick={e => {
+          //屏蔽row点击事件
+          e.stopPropagation()
+        }}
         onBlur={e => {
           const data = [...this.state.data];
           /*  let rooms=e.target.innerHTML
@@ -70,6 +90,7 @@ class SelectAccessHardware extends Component {
       Other implementations could use object keys, a Javascript Set, or Redux... etc.
     */
     // start off with the existing state
+
     let selection = [...this.state.selection];
     const keyIndex = selection.indexOf(key);
     // check to see if the key exists
@@ -214,7 +235,7 @@ class SelectAccessHardware extends Component {
               whereSql = `  and (accessControlId is null or accessControlId=${this.props.pid})`
             else
               whereSql = '  and accessControlId is null '
-            
+
             state.filtered.forEach(
               v => {
                 /*    if (v.id === 'address')
@@ -224,8 +245,8 @@ class SelectAccessHardware extends Component {
               }
             )
             //this.props.dispatch(getAccessHardwareList(this.props.pid))
-           
-            this.props.dispatch(getAccessHardwareList({ whereSql:whereSql+' order by accessControlId desc', page: state.page, size: state.pageSize }))
+
+            this.props.dispatch(getAccessHardwareList({ whereSql: whereSql + ' order by accessControlId desc', page: state.page, size: state.pageSize }))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -243,7 +264,8 @@ class SelectAccessHardware extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    // this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    toggleSelection(rowInfo.row.id, null, rowInfo.row)
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })
