@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { Field, reduxForm, change, FieldArray, formValueSelector, getFormValues, formValues } from 'redux-form';
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
 import { getAccessHardwareList } from '../actions/accessHardware'
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
@@ -17,8 +18,8 @@ class SelectAccessHardware extends Component {
     // this.props.dispatch(getAccessHardwareList(this.props.pid))
   }
   componentWillReceiveProps(nextProps) {
-    
-    if (this.state.data === undefined||nextProps.accessHardwares.content!=this.state.data) {
+
+    if (this.state.data === undefined || nextProps.accessHardwares.content != this.state.data) {
       this.setState({ data: nextProps.accessHardwares.content })
       let content = nextProps.accessHardwares.content
       if (content != undefined) {
@@ -42,7 +43,10 @@ class SelectAccessHardware extends Component {
       selectAll: false,
       data: props.accessHardwares.content
     };
-    this.renderEditable = this.renderEditable.bind(this);
+    this.renderEditable = this.renderEditable.bind(this)
+    this.renderSelectEntranceType = this.renderSelectEntranceType.bind(this)
+    this.renderSelectEntranceDirection = this.renderSelectEntranceDirection.bind(this)
+   
   }
   componentDidUpdate() {
     //将选中的记录传值给表单
@@ -53,16 +57,17 @@ class SelectAccessHardware extends Component {
     }
     let selHardwares = new Array()
     data.map(d => {
-      if (this.state.selection.indexOf(d.id) > -1)
-        selHardwares.push({ id: d.id, name: d.name })
-    })
+      if (this.state.selection.indexOf(d.id) > -1){   
+        selHardwares.push({ id: d.id, name: d.name,entranceDirection:d.entranceDirection,entranceType:d.entranceType})
+   
+      }})
 
     this.props.handleTableValues(selHardwares)
   }
   renderEditable(cellInfo) {
     return (
       <div
-        style={{ backgroundColor: "#fafafa" }}
+        style={{ backgroundColor: "#fafafa", height:"35px" }}
         contentEditable
         suppressContentEditableWarning
         onClick={e => {
@@ -81,6 +86,48 @@ class SelectAccessHardware extends Component {
           __html: this.state.data[cellInfo.index][cellInfo.column.id]
         }}
       />
+    );
+  }
+  renderSelectEntranceType(cellInfo) {
+    //alert(JSON.stringify(this.state.data))
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+       // contentEditable
+      //  suppressContentEditableWarning
+        onClick={e => {
+          e.stopPropagation()
+        }}
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.value;        
+          this.setState({ data });
+        }}
+      ><Input type="select">
+          <option value="1" selected>匝道</option>
+          <option value="2" selected={this.state.data[cellInfo.index][cellInfo.column.id]===2?"selected":""}>探头</option>
+        </Input></div>
+    );
+  }
+  renderSelectEntranceDirection(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+       // contentEditable
+       // suppressContentEditableWarning
+        onClick={e => {
+          e.stopPropagation()
+        }}
+        onBlur={e => {
+          const data = [...this.state.data];
+          //data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;   
+          data[cellInfo.index][cellInfo.column.id] =e.target.value    
+          this.setState({ data });
+        }}
+      ><Input type="select">
+          <option value="0" selected>入口</option>
+          <option value="1"  selected={this.state.data[cellInfo.index][cellInfo.column.id]===1?"selected":""}>出口</option>
+        </Input></div>
     );
   }
   toggleSelection = (key, shift, row) => {
@@ -183,6 +230,15 @@ class SelectAccessHardware extends Component {
             Header: '名称',
             Cell: this.renderEditable,
           }, {
+            accessor: 'entranceDirection',
+            Header: '出入类型',
+            Cell: this.renderSelectEntranceDirection
+          }, {
+            accessor: 'entranceType',
+            //accessor: d => d.entranceType == 1 ? '匝道' : d.entranceType == 2 ? '探头' :'',
+            Header: '门禁类型',
+            Cell: this.renderSelectEntranceType
+          }, {
             id: 'category',
             accessor: d => d.category === 1 ? '蓝牙' : d.category === 2 ? '二维码' : d.category === 3 ? '蓝牙及二维码' : '',
             Header: '硬件类型',
@@ -223,7 +279,7 @@ class SelectAccessHardware extends Component {
           },
           ]}
           resizable={false}
-          minRows={15}
+          minRows={10}
           defaultPageSize={10} filterable
           className="-striped -highlight"
           /* onPageChange={(pageIndex) => this.props.dispatch(getAccessHardware({page:pageIndex,size:10}))}  */
@@ -258,10 +314,11 @@ class SelectAccessHardware extends Component {
                 style.background = '#62c2de';
               }
               return {
-                style, onDoubleClick: (e, handleOriginal) => {
+                style, 
+               /*  onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditAccessHardware: true, edit: false })
-                },
+                }, */
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
                     // this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })

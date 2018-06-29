@@ -33,7 +33,7 @@ export const fillProjectList = (values) => {
     }
 }
 
-//根据楼盘ID获取未分配公共区域列表（包含本门禁占用的公共区域）
+
 export const getPublicAreaByProject = (id,accessControlId) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken

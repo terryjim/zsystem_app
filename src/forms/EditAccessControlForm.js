@@ -22,15 +22,12 @@ const validate = values => {
   if (!values.publicControl) {
     errors.publicControl = '授权类型为空'
   }
-  if (!values.entranceType) {
-    errors.entranceType = '硬件类型不能为空'
+  if (!values.locationId) {
+    errors.locationId = '区域/单元信息不能为空'
   }
-  if (!values.entranceDirection) {
-    errors.entranceDirection = '出入类型不能为空'
-  }
-  if (!values.hardwares) {
+/*   if (!values.hardwares) {
     errors.hardwares = '请至少匹配一条门禁数据'
-  }
+  } */
   return errors
 }
 
@@ -48,23 +45,14 @@ let EditAccessControlForm = props => {
     if (publicControlValue == 4)
       dispatch(getUnitByBuilding(buildingValue))
   }
-
-  const getHardwares = (values) => {
-    dispatch(change('accessControl', 'hardwares', values))
-    /*  if (structureValue == undefined) {
-       let arr = new Array(unitsValue).fill({})
-       arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
-       dispatch(change('building', 'structure', arr))
-     } else {
-       let arr = structureValue
-       arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
-       dispatch(change('building', 'structure', arr))
-     } */
+//选择、修改硬件grid后更新hardwares字段
+  const getHardwares = (values) => {    
+    dispatch(change('accessControl', 'hardwares', values))   
   }
   return (
     <form onSubmit={handleSubmit} >
       <Row>
-        <Col xs="12" sm="6">
+        <Col xs="12" sm="12">
           <Field name="id" component="input" type="hidden" label="id" />
 
           <Field readOnly={readOnly}
@@ -74,7 +62,6 @@ let EditAccessControlForm = props => {
             label="位置信息"
             sm="3"
           />
-
 
           <FormGroup row>
             <Col md="3">
@@ -113,74 +100,9 @@ let EditAccessControlForm = props => {
           <Field readOnly={readOnly}
             name="publicControl"
             component={InputField}
-            type="text"
+            type="hidden"
             label=""
-
-          />      <FormGroup row>
-            <Col md="3">
-              <Label>&nbsp;&nbsp;&nbsp;&nbsp;硬件类型</Label>
-            </Col>
-            <Col md="9">
-              <FormGroup check inline>
-                <Field className="form-check-input"
-                  name="entranceType"
-                  component="input"
-                  type="radio"
-                  value="1"
-                />{' '}
-                匝道{'  '}
-              </FormGroup>
-              <FormGroup check inline>
-                <Field className="form-check-input"
-                  name="entranceType"
-                  component="input"
-                  type="radio"
-                  value="2"
-                />{' '}
-                探头{'  '}
-              </FormGroup>
-
-            </Col>
-          </FormGroup>
-          <Field readOnly={readOnly}
-            name="entranceType"
-            component={InputField}
-            type="text"
-            label=""
-
-          />
-          <FormGroup row>
-            <Col md="3">
-              <Label>&nbsp;&nbsp;&nbsp;&nbsp;出入类型</Label>
-            </Col>
-            <Col md="9">
-              <FormGroup check inline>
-                <Field className="form-check-input"
-                  name="entranceDirection"
-                  component="input"
-                  type="radio"
-                  value="0"
-                />{' '}
-                入口{'  '}
-              </FormGroup>
-              <FormGroup check inline>
-                <Field className="form-check-input"
-                  name="entranceDirection"
-                  component="input"
-                  type="radio"
-                  value="1"
-                />{' '}
-                出口{'  '}
-              </FormGroup>
-            </Col>
-          </FormGroup>
-          <Field readOnly={readOnly}
-            name="entranceDirection"
-            component={InputField}
-            type="text"
-            label=""
-
-          />
+          />  
           <Container><FormGroup row>
             <Label sm={3} for="projectId">楼盘名称</Label>
             <Col sm={9}>
@@ -221,26 +143,7 @@ let EditAccessControlForm = props => {
             type="hidden"
             label="楼栋名称"
           />
-          {/*   <Container  hidden={publicControlValue==undefined||publicControlValue!=4}><FormGroup row>
-        <Label sm={3} for="unit">单元名称</Label>
-        <Col sm={9}>
-          <Field name="unit" component="select"  >
-            <option value="">请选择单元</option>
-            {projectList != undefined ?
-              projectList.map(pro => (
-                <option value={pro.id} key={pro.id}>
-                  {pro.name}
-                </option>
-              )) : ''}
-          </Field>
-        </Col>
-      </FormGroup></Container>
-      <Field readOnly={readOnly}
-        name="unit"
-        component={InputField}
-        type="hidden"
-        label="单元名称"
-      /> */}
+        
           <Container><FormGroup row>
             <Label sm={3} for="locationId">{publicControlValue != undefined && publicControlValue == 4 ? '单元' : '区域'}信息</Label>
             <Col sm={9}>
@@ -263,7 +166,21 @@ let EditAccessControlForm = props => {
           />
 
           {error && <strong>{error}</strong>}
-
+          <Card>
+            <CardHeader>
+              <strong>门禁选择</strong>
+              <Field readOnly={readOnly}
+                name="hardwares"
+                component={InlineField}
+                type="hidden"
+                label="硬件信息"
+                sm="3"
+              />
+            </CardHeader>
+            <CardBody>
+              <SelectAccessHardware pid={initialValues.id} handleTableValues={getHardwares} />
+            </CardBody>
+          </Card>
 
           <Row className="align-items-center">
             <Col col='9' />
@@ -289,23 +206,9 @@ let EditAccessControlForm = props => {
         </button>
       </div> */}
         </Col>
-        <Col xs="12" sm="6">
-          <Card>
-            <CardHeader>
-              <strong>门禁</strong>
-              <small> 选择</small><Field readOnly={readOnly}
-                name="hardwares"
-                component={InlineField}
-                type="text"
-                label="硬件信息"
-                sm="3"
-              />
-            </CardHeader>
-            <CardBody>
-              <SelectAccessHardware pid={initialValues.id} handleTableValues={getHardwares} />
-            </CardBody>
-          </Card>
-        </Col>
+       {/*  <Col xs="12" sm="6">
+         
+        </Col> */}
       </Row>
     </form>
   );
@@ -339,7 +242,7 @@ const mapStateToProps = (state) => {
       else if (cFormData._original.location.unit != undefined)
       locationId =''+ cFormData._original.location.unit
     }
-    initialValues = { ...cFormData._original, locationId, publicControl: "" + cFormData._original.publicControl, entranceDirection: "" + cFormData._original.entranceDirection, entranceType: "" + cFormData._original.entranceType, projectId: cFormData._original.projectId } // 单选框选中状态必须为字符串，所以要将数字加引号
+    initialValues = { ...cFormData._original, locationId, publicControl: "" + cFormData._original.publicControl,  projectId: cFormData._original.projectId } // 单选框选中状态必须为字符串，所以要将数字加引号
 
   } return { initialValues, projectList, buildingList, publicAreaList, projectValue, buildingValue, publicControlValue }
 }

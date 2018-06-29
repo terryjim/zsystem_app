@@ -20,6 +20,8 @@ class AccessControl extends Component {
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'accessControl'))
     }
+    if (nextProps.closeModal)    //保存成功后关闭表单窗口
+      this.setState({ showEditAccessControl: false })
   }
   constructor(props) {
     super(props);
@@ -141,17 +143,10 @@ class AccessControl extends Component {
     Header: '位置名称',
 
   }, {
-    accessor: 'name',
-    Header: '门禁名称',
-
-  }, {
     id: 'publicControl',
     Header: '授权类型',
     accessor: d => d.publicControl == 1 ? '楼盘' : d.publicControl == 2 ? '楼栋' : d.publicControl == 4 ? '单元' : '',
-
   },
-
-
   {
     accessor: 'projectName',
     Header: '楼盘',
@@ -164,11 +159,16 @@ class AccessControl extends Component {
     accessor: 'projectId',
     Header: '楼盘id',
 
-  }, {
+  },  {
     accessor: 'buildingId',
     Header: '楼栋id',
 
-  }, {
+  },{
+    id: 'location',
+    Header: '区域信息',
+    accessor: d => d.location===undefined?'':d.location.id ===undefined?d.location.unit:  d.location.name,
+
+  }/* , {
     id: 'category',
     accessor: d => d.category == 1 ? '蓝牙' : d.category == 2 ? '二维码' : d.category == 3 ? '蓝牙及二维码' : '',
     Header: '硬件类型',
@@ -202,7 +202,7 @@ class AccessControl extends Component {
     accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : 'XXX',
 
 
-  },/*  {
+  } */,/*  {
     accessor: 'shakeRssi',
     Header: '摇一摇距离',
 
@@ -210,11 +210,7 @@ class AccessControl extends Component {
     accessor: 'nearRssi',
     Header: '靠近距离',
 
-  },  */{
-    accessor: 'hardwareCode',
-    Header: '硬件编号',
-
-  }
+  },  */
   ];
 
   render() {
@@ -322,10 +318,11 @@ class AccessControl extends Component {
 //获取accessControl记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let accessControls = state.cList
+  let success = state.success
   console.log(accessControls)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'accessControl' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { accessControls, editedIds, confirmDel }
+  return { closeModal: success.show, accessControls, editedIds, confirmDel }
 }
 
 
