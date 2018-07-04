@@ -86,7 +86,7 @@ let EditDepartmentForm = props => {
         type="text"
         label="项目部"
       />
-      <FormGroup row>
+      {/* <FormGroup row>
         <Col md="3">
           <Label>&nbsp;&nbsp;&nbsp;&nbsp;状态</Label>
         </Col>
@@ -110,7 +110,7 @@ let EditDepartmentForm = props => {
             禁用{'  '}
           </FormGroup>
         </Col>
-      </FormGroup>
+      </FormGroup> */}
       {/* 
       <Field readOnly={readOnly}
         name="enabled"
@@ -166,21 +166,21 @@ const mapStateToProps = (state) => {
   let propertyList = state.propertyList
   let projectList = state.projectList
   console.log(state.cForm.data)
-  let initEnabled = '0'
+  //let initEnabled = '0'
   let property = 0
   let project = 0
   if (state.cForm.data != undefined && state.cForm.data != null) {
-    initEnabled = '' + state.cForm.data.enabled
+    //initEnabled = '' + state.cForm.data.enabled
     if (state.cForm.data._original != undefined && state.cForm.data._original != null) {
       if(state.cForm.data._original.property!=undefined)
       property = state.cForm.data._original.property.id
       if(state.cForm.data._original.project!=undefined)
       project = state.cForm.data._original.project.id
     }
-    if (initEnabled == undefined || initEnabled == null)
-      initEnabled = '0'
+   /*  if (initEnabled == undefined || initEnabled == null)
+      initEnabled = '0' */
   }
-  return { initialValues: { ...state.cForm.data, enabled: initEnabled, property, project }, propertyList, projectList }// 单选框选中状态必须为字符串，所以要将数字加引号
+  return { initialValues: { ...state.cForm.data,  property, project }, propertyList, projectList }// 单选框选中状态必须为字符串，所以要将数字加引号
 }
 
 EditDepartmentForm = connect(

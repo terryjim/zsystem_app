@@ -34,6 +34,11 @@ const AccessHardware= Loadable({
   loader: () => import('./views/AccessHardware'),
   loading: Loading,
 })
+const ParkingLot= Loadable({
+  loader: () => import('./views/ParkingLot'),
+  loading: Loading,
+})
+
 
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
@@ -215,8 +220,8 @@ const routes = [
   { path: '/property/allot', name: '物业楼盘分配', component: DepartmentAndBuildings }, 
   { path: '/accessControl/setting', name: '硬件参数设置', component: AccessHardware }, 
   { path: '/accessControl/allot', name: '门禁分配', component: AccessControl }, 
+  { path: '/parkingLot/setting', name: '停车场设置', component: ParkingLot }, 
  
-
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   { path: '/theme/colors', name: '楼盘管理', component: Project },
   { path: '/theme/typography', name: '楼栋管理', component: Building },

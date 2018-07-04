@@ -176,12 +176,12 @@ class Department extends Component {
     accessor: 'name',
     Header: '项目部名称',
     width: 300,
-  }, {
+  },/*  {
     accessor: 'enabled',
     Header: '状态',
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
-  }, {
+  }, */ {
     // accessor: 'projectName',
     id: 'project',
     Header: '所属楼盘',

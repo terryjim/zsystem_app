@@ -140,12 +140,12 @@ class Property extends Component {
     accessor: 'companyName',
     Header: '物业名称',
     width: 400,
-  }, {
+  },/*  {
     accessor: 'enabled',
     Header: '状态',
     width: 80,
     Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
-  },  /*{
+  },  */ /*{
     //accessor: 'enabled',
     id:'enabled',
     Header: '状态',

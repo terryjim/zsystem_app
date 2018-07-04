@@ -31,7 +31,7 @@ let EditPropertyForm = props => {
         type="text"
         label="物业名称"
       />
-      <FormGroup row>
+     {/*  <FormGroup row>
         <Col md="3">
           <Label>&nbsp;&nbsp;&nbsp;&nbsp;状态</Label>
         </Col>
@@ -55,7 +55,7 @@ let EditPropertyForm = props => {
             禁用{'  '}
           </FormGroup>
         </Col>
-      </FormGroup>
+      </FormGroup> */}
      {/* 
       <Field readOnly={readOnly}
         name="enabled"
