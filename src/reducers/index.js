@@ -14,6 +14,7 @@ import publicAreaList from './publicAreaList'
 import { reducer as formReducer } from 'redux-form'
 import accessHardwareList from './accessHardwareList'
 import departmentList from './departmentList'
+import loading from './loading'
 // export default combineReducers({user,form:formReducer,sms})
-export default combineReducers({departmentList,accessHardwareList,publicAreaList,buildingList,propertyList,projectList,assignRooms,cList,cForm,confirm,user,err,success,form: formReducer })
+export default combineReducers({loading,departmentList,accessHardwareList,publicAreaList,buildingList,propertyList,projectList,assignRooms,cList,cForm,confirm,user,err,success,form: formReducer })
 

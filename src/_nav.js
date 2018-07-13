@@ -63,6 +63,30 @@ export default {
     },
     {
       title: true,
+      name: '门禁管理',
+      wrapper: {            // optional wrapper object
+        element: 'div',        // required valid HTML5 element tag
+        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      },
+      //url:'/theme',
+      /* wrapper: {            // optional wrapper object
+        element: '',        // required valid HTML5 element tag
+        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      }, */
+      // icon: 'icon-energy',
+      //class: '',             // optional class names space delimited list for title item ex: "text-center"
+    },
+    {
+      name: '硬件参数设置',
+      url: '/accessControl/setting',
+      icon: 'icon-settings',
+    },
+    {
+      name: '门禁分配设置',
+      url: '/accessControl/allot',
+      icon: 'icon-location-pin',
+    },{
+      title: true,
       name: '停车场管理',
       wrapper: {            // optional wrapper object
         element: 'div',        // required valid HTML5 element tag
@@ -81,11 +105,6 @@ export default {
       url: '/parkingLot/setting',
       icon: 'icon-settings',
     },
-   /*  {
-      name: '门禁分配设置',
-      url: '/accessControl/allot',
-      icon: 'icon-location-pin',
-    }, */
 /* 
     {
       title: true,

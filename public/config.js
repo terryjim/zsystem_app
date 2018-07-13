@@ -1,7 +1,7 @@
-const defaultUrl = "http://localhost/"
-//const defaultUrl = "http://192.168.10.153/"
+//const defaultUrl = "/"
+const defaultUrl = "http://192.168.10.153/"
 const TParams = {
-    defaultUrl,
+    defaultUrl:defaultUrl,
     defaultPageSize:20,
     urls: {
         /* get_project_list: defaultUrl + 'project/getByPage',

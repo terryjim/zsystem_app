@@ -3,6 +3,10 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Input, InputGroup, I
 import { connect } from 'react-redux'
 import { login,loginOut } from '../../../actions/auth'
 import { Redirect, Route, Switch } from 'react-router-dom';
+import SuccessModal from '../../../components/SuccessModal'
+import ErrModal from '../../../components/ErrModal'
+import ConfirmModal from '../../../components/ConfirmModal'
+import LoadingModal from '../../../components/LoadingModal'
 class Login extends Component {
   componentWillMount(){
     window.sessionStorage.accessToken=''
@@ -19,6 +23,7 @@ class Login extends Component {
     } else */
     return (
       <div className="app flex-row align-items-center">
+      <ErrModal/><SuccessModal/><ConfirmModal/><LoadingModal/>
         <Container>
           <Row className="justify-content-center">
             <Col md="8">
