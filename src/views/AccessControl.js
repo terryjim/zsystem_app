@@ -103,7 +103,7 @@ class AccessControl extends Component {
     });
   }
   submit = (values) => {
-   // console.log(values)    
+   console.log(values)    
     this.props.dispatch(saveForm(values, 'accessControl'))
    // this.setState({ showEditAccessControl: false })
   }

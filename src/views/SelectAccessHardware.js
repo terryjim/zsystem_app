@@ -9,7 +9,7 @@ import { Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Ca
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-
+//门禁分配表单中的门禁选择grid
 const CheckboxTable = checkboxHOC(ReactTable);
 class SelectAccessHardware extends Component {
   componentWillMount() {
@@ -46,7 +46,7 @@ class SelectAccessHardware extends Component {
     this.renderEditable = this.renderEditable.bind(this)
     this.renderSelectEntranceType = this.renderSelectEntranceType.bind(this)
     this.renderSelectEntranceDirection = this.renderSelectEntranceDirection.bind(this)
-   
+    this.renderSelectAllowedControl = this.renderSelectAllowedControl.bind(this)
   }
   componentDidUpdate() {
     //将选中的记录传值给表单
@@ -57,17 +57,18 @@ class SelectAccessHardware extends Component {
     }
     let selHardwares = new Array()
     data.map(d => {
-      if (this.state.selection.indexOf(d.id) > -1){   
-        selHardwares.push({ id: d.id, name: d.name,entranceDirection:d.entranceDirection,entranceType:d.entranceType})
-   
-      }})
+      if (this.state.selection.indexOf(d.id) > -1) {
+        selHardwares.push({ id: d.id, name: d.name, entranceDirection: d.entranceDirection, entranceType: d.entranceType,allowedControl:d.allowedControl })
+
+      }
+    })
 
     this.props.handleTableValues(selHardwares)
   }
   renderEditable(cellInfo) {
     return (
       <div
-        style={{ backgroundColor: "#fafafa", height:"35px" }}
+        style={{ backgroundColor: "#fafafa", height: "35px" }}
         contentEditable
         suppressContentEditableWarning
         onClick={e => {
@@ -93,19 +94,19 @@ class SelectAccessHardware extends Component {
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
-       // contentEditable
-      //  suppressContentEditableWarning
+        // contentEditable
+        //  suppressContentEditableWarning
         onClick={e => {
           e.stopPropagation()
         }}
         onBlur={e => {
           const data = [...this.state.data];
-          data[cellInfo.index][cellInfo.column.id] = e.target.value;        
+          data[cellInfo.index][cellInfo.column.id] = e.target.value;
           this.setState({ data });
         }}
       ><Input type="select">
           <option value="1" selected>匝道</option>
-          <option value="2" selected={this.state.data[cellInfo.index][cellInfo.column.id]===2?"selected":""}>探头</option>
+          <option value="2" selected={this.state.data[cellInfo.index][cellInfo.column.id] === 2 ? "selected" : ""}>探头</option>
         </Input></div>
     );
   }
@@ -113,23 +114,64 @@ class SelectAccessHardware extends Component {
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
-       // contentEditable
-       // suppressContentEditableWarning
+        // contentEditable
+        // suppressContentEditableWarning
         onClick={e => {
           e.stopPropagation()
         }}
         onBlur={e => {
           const data = [...this.state.data];
           //data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;   
-          data[cellInfo.index][cellInfo.column.id] =e.target.value    
+          data[cellInfo.index][cellInfo.column.id] = e.target.value
           this.setState({ data });
         }}
       ><Input type="select">
           <option value="0" selected>入口</option>
-          <option value="1"  selected={this.state.data[cellInfo.index][cellInfo.column.id]===1?"selected":""}>出口</option>
+          <option value="1" selected={this.state.data[cellInfo.index][cellInfo.column.id] === 1 ? "selected" : ""}>出口</option>
         </Input></div>
     );
   }
+  renderSelectAllowedControl(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        // contentEditable
+        // suppressContentEditableWarning
+        onClick={e => {
+          e.stopPropagation()
+        }}
+        onChange={e => {
+          const data = [...this.state.data];
+          //data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;  
+          let checkbox_allowedControl = document.getElementsByName('allowed_control_' + cellInfo.index)
+          let ret = 0
+          checkbox_allowedControl.forEach((v, index) => {
+            if (v.checked)
+              ret = ret | v.value
+            else {
+              if (index == 0)
+                ret = ret & 14
+              if (index == 1)
+                ret = ret & 13
+              if (index == 2)
+                ret = ret & 11
+              if (index == 3)
+                ret = ret & 7
+            }
+          })        
+          data[cellInfo.index][cellInfo.column.id] = ret        
+          this.setState({ data });
+        }}
+      > <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="1" checked={(this.state.data[cellInfo.index][cellInfo.column.id])&1?'checked':''}/>蓝牙 </label>{' '}
+        <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="2" checked={this.state.data[cellInfo.index][cellInfo.column.id]&2?'checked':''}/>二维码 </label>{' '}
+        <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="4" checked={this.state.data[cellInfo.index][cellInfo.column.id]&4?'checked':''} />远程 </label>{' '}
+        <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="8" checked={this.state.data[cellInfo.index][cellInfo.column.id]&8?'checked':''}/>ID卡 </label>
+      </div>
+    );
+  }
+
+
+
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -239,16 +281,14 @@ class SelectAccessHardware extends Component {
             Header: '门禁类型',
             Cell: this.renderSelectEntranceType
           }, {
-            id: 'category',
-            accessor: d => d.category === 1 ? '蓝牙' : d.category === 2 ? '二维码' : d.category === 3 ? '蓝牙及二维码' : '',
-            Header: '硬件类型',
+            accessor: 'allowedControl',
+            //accessor: d => d.entranceType == 1 ? '匝道' : d.entranceType == 2 ? '探头' :'',
+            Header: '开门方式',
+            width: 240,
+            Cell: this.renderSelectAllowedControl
           }, {
             accessor: 'hardwareCode',
             Header: '硬件编号',
-
-          }, {
-            accessor: 'hardwareVer',
-            Header: '硬件版本',
 
           }, {
             accessor: 'hardwareMac',
@@ -265,6 +305,10 @@ class SelectAccessHardware extends Component {
 
 
           }, {
+            id: 'category',
+            accessor: d => d.category === 1 ? '蓝牙' : d.category === 2 ? '二维码' : d.category === 3 ? '蓝牙及二维码' : '',
+            Header: '硬件类型',
+          }, {
             accessor: 'shakeRssi',
             Header: '摇一摇距离',
 
@@ -275,6 +319,10 @@ class SelectAccessHardware extends Component {
           }, {
             accessor: 'hardwareCode',
             Header: '硬件编号',
+
+          }, {
+            accessor: 'hardwareVer',
+            Header: '硬件版本',
 
           },
           ]}
@@ -314,11 +362,11 @@ class SelectAccessHardware extends Component {
                 style.background = '#62c2de';
               }
               return {
-                style, 
-               /*  onDoubleClick: (e, handleOriginal) => {
-                  this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditAccessHardware: true, edit: false })
-                }, */
+                style,
+                /*  onDoubleClick: (e, handleOriginal) => {
+                   this.props.dispatch(fillForm(rowInfo.row));
+                   this.setState({ showEditAccessHardware: true, edit: false })
+                 }, */
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
                     // this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })

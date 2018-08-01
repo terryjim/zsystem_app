@@ -65,11 +65,7 @@ const validate = values => {
 
 let EditDepartmentAndBuildingsForm = props => {
   const {readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues,pid } = props;
-console.log(initialValues)
-  //const buildingList=initialValues.buildingList
- let getBuildings = (values) => {
-    console.log('---------------------------------------')
-    console.log(values)
+ let getBuildings = (values) => {   
     if(values!=undefined&&values!=null){
     dispatch(change('EditDepartmentAndBuildingsForm', 'buildings', values.buildings))
     }else{
