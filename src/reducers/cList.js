@@ -43,7 +43,8 @@ let sample = {
     "size": 20,
     "sort": null,
     "first": true,
-    "numberOfElements": 2
+    "numberOfElements": 2,
+    editedIds: [],//添加或编辑的id列表
 }
 const cList = (state = {}, action) => {
     if (action.type === 'GET_LIST') {
@@ -61,13 +62,15 @@ const cList = (state = {}, action) => {
                 state.content.splice(index, 1, action.data);
             else
                 state.content.splice(0, 0, action.data);
-            //state.push(action.data)
+            if (state.editedIds === undefined)
+                state.editedIds = [action.data.id]
+            else
+                state.editedIds.push(action.data.id)
             state = Object.assign({}, state)
         }
     }
     if (action.type === 'DEL_FROM_GRID') {
         if (action.data != null) {
-            //如果存在相由的id说明是修改记录，则先删除state中原记录  
             action.data.map(id => {
                 let index = state.content.findIndex(v => v.id === id)
                 if (index > -1)
@@ -80,19 +83,20 @@ const cList = (state = {}, action) => {
     //action.data: {id:'',buildings:[]}
     if (action.type === 'ALLOT_BUILDINGS_MODIFY_GRID') {
         if (action.data != null) {
-            let buildings=action.data.buildings
+            let buildings = action.data.buildings
             //解除原来绑定buildings信息           
-            state.content.map(s=>{
-                if(s.buildings!=undefined){
-                s.buildings=s.buildings.filter(item=>{
-                    //若项目部buildings列表中包含等分配楼栋id则删除
-                    return buildings.indexOf(item.id)<0})
+            state.content.map(s => {
+                if (s.buildings != undefined) {
+                    s.buildings = s.buildings.filter(item => {
+                        //若项目部buildings列表中包含等分配楼栋id则删除
+                        return buildings.indexOf(item.id) < 0
+                    })
                 }
             })
             //返回值id(项目部）,buildings（分配楼栋数组）            
             let index = state.content.findIndex(v => v.id === action.data.id)
             if (index > -1) {
-                state.content[index].buildings = buildings.map(x=>({id:x})) 
+                state.content[index].buildings = buildings.map(x => ({ id: x }))
             }
             state = Object.assign({}, state)
         }
