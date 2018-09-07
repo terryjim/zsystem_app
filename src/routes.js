@@ -34,6 +34,10 @@ const AccessHardware= Loadable({
   loader: () => import('./views/AccessHardware'),
   loading: Loading,
 })
+const Whitelist=Loadable({
+  loader: () => import('./views/Whitelist'),
+  loading: Loading,
+})
 const ParkingLot= Loadable({
   loader: () => import('./views/ParkingLot'),
   loading: Loading,
@@ -220,6 +224,7 @@ const routes = [
   { path: '/property/allot', name: '物业楼盘分配', component: DepartmentAndBuildings }, 
   { path: '/accessControl/setting', name: '硬件参数设置', component: AccessHardware }, 
   { path: '/accessControl/allot', name: '门禁分配', component: AccessControl }, 
+  { path: '/accessControl/whitelist', name: '白名单设置', component: Whitelist }, 
   { path: '/parkingLot/setting', name: '停车场设置', component: ParkingLot }, 
  
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },

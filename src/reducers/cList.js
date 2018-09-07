@@ -52,8 +52,7 @@ const cList = (state = {}, action) => {
             state = Object.assign({}, action.data)
         //console.log(state)
     }
-    if (action.type === 'ADD_TO_GRID') {
-        //console.log(action.data)
+    if (action.type === 'ADD_TO_GRID') {       
         if (action.data != null) {
             //console.log(action.data)
             //如果存在相由的id说明是修改记录，则先删除state中原记录           

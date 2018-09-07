@@ -11,20 +11,20 @@ class RoomEditableTable extends React.Component {
       data: props.data
       //[{name:1,rooms:[01,02,03]}]}]
     };
-    this.renderEditable = this.renderEditable.bind(this);
-//    props.handleTableValues({ unit: props.unit, floors: this.state.data })
+    this.renderRoomEditable = this.renderRoomEditable.bind(this);
+    this.renderFloorEditable = this.renderFloorEditable.bind(this);
   }
-  componentDidMount(){
+  componentDidMount() {
     this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
   }
   componentWillReceiveProps(nextProps) {
     this.setState({ data: nextProps.data })
 
   }
-  renderEditable(cellInfo) {
+  renderRoomEditable(cellInfo) {
     return (
       <div
         style={{ backgroundColor: "#fafafa" }}
@@ -32,8 +32,8 @@ class RoomEditableTable extends React.Component {
         suppressContentEditableWarning
         onBlur={e => {
           const data = [...this.state.data];
-          let rooms=e.target.innerHTML
-          let roomArray=rooms.split(',')
+          let rooms = e.target.innerHTML
+          let roomArray = rooms.split(',')
           //data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
           data[cellInfo.index][cellInfo.column.id] = roomArray;
           this.setState({ data });
@@ -44,8 +44,32 @@ class RoomEditableTable extends React.Component {
       />
     );
   }
+  renderFloorEditable(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onClick={e => {
+          //屏蔽row点击事件
+          e.stopPropagation()
+        }}
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
+
+
+
+  }
   render() {
-    const { data } = this.state;    
+    const { data } = this.state;
     return (
       <ReactTable
         showPagination={false}
@@ -81,13 +105,13 @@ class RoomEditableTable extends React.Component {
             Header: "楼层",
             accessor: "name",
             width: 40,
-            Cell: this.renderEditable
+            Cell: this.renderFloorEditable
           },
           {
             Header: "房号",
             accessor: "rooms",
             // width: 200,
-            Cell: this.renderEditable,
+            Cell: this.renderRoomEditable,
             sortable: false
           }
         ]}

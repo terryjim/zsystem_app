@@ -124,11 +124,12 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')
         getUrl = window.TParams.defaultUrl + module + '/getByPage'
+    console.log(getUrl)
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
             console.log(json)
             if (json.code !== 0)
-                return dispatch(showError(json.msg + '<br>' + json.data))
+                return dispatch(showError(111 + json.msg + '<br>' + json.data))
             else
                 return dispatch(getListResult(json.data))
         }).catch(e => {
@@ -144,21 +145,22 @@ export const getListResult = (json) => (
     }
 )
 
-//保存管理员
+//保存
 export const saveForm = (values, module) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(values)
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
-    let saveUrl = window.TParams.urls['save_' + module] 
+    let saveUrl = window.TParams.urls['save_' + module]
     if (saveUrl === undefined || saveUrl === '')
         saveUrl = window.TParams.defaultUrl + module + '/save'
     dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {
+            //console.log(json)
             dispatch(loaded())
             if (json.code !== 0) {
-                console.log(json.msg)
+                //console.log(json.msg)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {

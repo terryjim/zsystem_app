@@ -86,6 +86,10 @@ export default {
       url: '/accessControl/allot',
       icon: 'icon-location-pin',
     },{
+      name: '白名单设置',
+      url: '/accessControl/whitelist',
+      icon: 'icon-puzzle',
+    },{
       title: true,
       name: '停车场管理',
       wrapper: {            // optional wrapper object
@@ -271,7 +275,7 @@ export default {
           url: '/icons/flags',
           icon: 'icon-star',
         },
-        {
+        {15348964968
           name: 'Font Awesome',
           url: '/icons/font-awesome',
           icon: 'icon-star',

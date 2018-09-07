@@ -1,6 +1,6 @@
 //const defaultUrl = "/"
-const defaultUrl = "http://localhost:9000/"
-//const defaultUrl = "http://118.31.72.47:9000/"
+//const defaultUrl = "http://localhost:9000/"
+const defaultUrl = "http://118.31.72.47:9000/"
 const TParams = {
     defaultUrl: defaultUrl,
     defaultPageSize: 20,
@@ -18,7 +18,10 @@ const TParams = {
         getProjectList: defaultUrl + 'project/getList',//获取楼盘列表
         getPropertyList: defaultUrl + 'property/getList',//获取物业公司列表
         getDepartmentList: defaultUrl + 'department/getList',//获取项目部列表
-        initPassword: defaultUrl + 'department/initPassword'//重新初始化项目部管理员密码
+        initPassword: defaultUrl + 'department/initPassword',//重新初始化项目部管理员密码
+        get_whitelist_list:defaultUrl+'whitelist/getSchedules',//获取白名单列表
+        save_whitelist:defaultUrl+'whitelist/saveSchedule',//保存白名单cron
+        enabledWhitelist:defaultUrl+'whitelist/enabledWhitelist',
     },
     manufacturers: [{ 'id': 1, 'name': '平冶' }, { 'id': 2, 'name': '智果' }]
 }
