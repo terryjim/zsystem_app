@@ -1,6 +1,6 @@
 //const defaultUrl = "/"
-//const defaultUrl = "http://localhost:9000/"
-const defaultUrl = "http://118.31.72.47:9000/"
+const defaultUrl = "http://localhost:9000/"
+//const defaultUrl = "http://118.31.72.47:9000/"
 const TParams = {
     defaultUrl: defaultUrl,
     defaultPageSize: 20,

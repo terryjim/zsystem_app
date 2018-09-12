@@ -2,18 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { getList, saveForm, fillForm } from '../actions/common'
 import { enabledWhitelist } from '../actions/whitelist'
-import { Badge, Row, Container, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-
+import { Badge, Label,Row, Container, Col, Button, Nav,NavItem, TabPane, TabContent, NavLink,  Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import classnames from 'classnames'
 import CronBuilder from 'react-cron-builder'
 import 'react-cron-builder/dist/bundle.css'
-
+import {CheckboxGroup} from '../components/field'
+import { Field, reduxForm, change, FieldArray } from 'redux-form';
+import CronForm from '../forms/CronForm'
 class Whitelist extends Component {
   constructor(props) {
     super(props);
-    this.state = {
 
-    };
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      activeTab: '1',
+    };    
   }
+
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
+
 
   componentDidMount() {
     this.props.dispatch(getList({}, 'whitelist'))
@@ -24,7 +37,8 @@ class Whitelist extends Component {
   }
 
   submit = (values) => {
-    this.props.dispatch(saveForm(values, 'whitelist'))
+    console.log(values)
+    //this.props.dispatch(saveForm(values, 'whitelist'))
     // this.setState({ showEditProject: false })
   }
 
@@ -33,7 +47,7 @@ class Whitelist extends Component {
     let schedule = this.props.schedule
     console.log(schedule)
     console.log(schedule.cron)
-    return (
+     return (
       <div className="animated fadeIn" >
         <div>状态:&nbsp;&nbsp;{schedule.enabled ? <Badge className="mr-1" color="success">启用运行中</Badge> : <Badge className="mr-1" color="danger">禁用中</Badge>}：
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -51,11 +65,13 @@ class Whitelist extends Component {
           showResult={true} submit={(value) => this.submit(value)}
         /><br /><br />
         </Container>
-
+       <CronForm onSubmit={this.submit} />
       </div>
     )
   }
 }
+
+
 //获取project记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let schedules = state.cList
@@ -75,3 +91,7 @@ Whitelist = connect(
   mapStateToProps
 )(Whitelist)
 export default Whitelist;
+
+
+
+
