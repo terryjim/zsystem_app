@@ -38,8 +38,17 @@ class CronForm extends Component {
     let optionsList = Array(60).fill(null).map((_, index) => {
       return { value: index, name: (index < 10 ? '0' : '') + index }
     })
-    let hoursList= Array(24).fill(null).map((_, index) => {
+    let hoursList = Array(24).fill(null).map((_, index) => {
       return { value: index, name: (index < 10 ? '0' : '') + index }
+    })
+    let daysList = Array(31).fill(null).map((_, index) => {
+      return { value: index + 1, name: (index < 9 ? '0' : '') + (index + 1) }
+    })
+    let monthsList = Array(12).fill(null).map((_, index) => {
+      return { value: index + 1, name: (index < 9 ? '0' : '') + (index + 1) }
+    })
+    let weeksList = Array(7).fill(null).map((_, index) => {
+      return { value: index + 1, name: (index < 9 ? '0' : '') + (index + 1) }
     })
     //let optionsList = [{ id: 1, name: 'Optoin11111' }, { id: 2, name: 'Option 22222' }, { id: 3, name: 'Option 33333' }]
     return (
@@ -118,7 +127,7 @@ class CronForm extends Component {
                         id="secondPeriod" name="second" value="2"
                       />
                       <Label check className="form-check-label" htmlFor="secondPeriod">
-                        <Row><Col md="4">周期从 </Col><Col md="2"><Field
+                        <Row><Col md="4">周期从 </Col><Col md="3"><Field
                           name="secondPeriodFrom"
                           component={InlineField}
                           type="text"
@@ -126,7 +135,7 @@ class CronForm extends Component {
                           mdLabel={0}
                           mdContent={12}
                         /></Col>
-                          <Col md="1">-</Col><Col md="2"><Field
+                          <Col md="1">-</Col><Col md="3"><Field
                             name="secondPeriodTo"
                             component={InlineField}
                             type="text"
@@ -180,7 +189,7 @@ class CronForm extends Component {
                     </FormGroup>
                   </Col>
                 </FormGroup>
-               
+
                 <FormGroup row>
                   <Col md="12">
                     <Field name="seconds" component={CheckboxGroup} options={optionsList} />
@@ -192,7 +201,7 @@ class CronForm extends Component {
 
                   <Col md="9">
                     <FormGroup check className="radio">
-                     {/*  <Input className="form-check-input" type="radio" id="minuteCommon" name="minute" value="1" /> */}
+                      {/*  <Input className="form-check-input" type="radio" id="minuteCommon" name="minute" value="1" /> */}
                       <Field className="form-check-input"
                         component="input"
                         type="radio"
@@ -278,88 +287,395 @@ class CronForm extends Component {
                 </FormGroup>
               </TabPane>
               <TabPane tabId="3">
-              <FormGroup row>
-              <Col md="9">
-                <FormGroup check className="radio">
-                  <Field className="form-check-input"
-                    component="input"
-                    type="radio"
-                    id="hourCommon" name="hour" value="1"
-                  />
-                  <Label check className="form-check-label" htmlFor="hourCommon">小时 允许的通配符[, - * /]</Label>
-                </FormGroup>
-                <FormGroup check className="radio">
-                 <Field className="form-check-input"
-                    component="input"
-                    type="radio"
-                    id="hourPeriod" name="hour" value="2"
-                  />
-                  <Label check className="form-check-label" htmlFor="hourPeriod">
-                    <Row><Col md="4">周期从 </Col><Col md="2"><Field
-                      name="hourPeriodFrom"
-                      component={InlineField}
-                      type="text"
-                      placeholder="0"
-                      mdLabel={0}
-                      mdContent={12}
-                    /></Col>
-                      <Col md="1">-</Col><Col md="2"><Field
-                        name="hourPeriodTo"
-                        component={InlineField}
-                        type="text"
-                        placeholder="0"
-                        mdLabel={0}
-                        mdContent={12}
-                      /></Col>
-                      <Col md="1">小时</Col>
-                    </Row>
-                  </Label>
-                </FormGroup>
-                <FormGroup check className="radio">
-                 <Field className="form-check-input"
-                    component="input"
-                    type="radio"
-                    id="hourFromPer" name="hour" value="3"
-                  />
-                  <Label check className="form-check-label" htmlFor="hourFromPer">
-                    <Row><Col md="2">从</Col>
-                      <Col md="2"><Field
-                        name="hourFrom"
-                        component={InlineField}
-                        type="text"
-                        placeholder="0"
-                        mdLabel={0}
-                        mdContent={12}
-                      /></Col>
-                      <Col md="3">小时开始,每</Col>
-                      <Col md="2">
-                        <Field
-                          name="hourPer"
+                <FormGroup row>
+                  <Col md="9">
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="hourCommon" name="hour" value="1"
+                      />
+                      <Label check className="form-check-label" htmlFor="hourCommon">小时 允许的通配符[, - * /]</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="hourPeriod" name="hour" value="2"
+                      />
+                      <Label check className="form-check-label" htmlFor="hourPeriod">
+                        <Row><Col md="3">周期从 </Col><Col md="3"><Field
+                          name="hourPeriodFrom"
                           component={InlineField}
                           type="text"
                           placeholder="0"
-                          mdLabel={0}
-                          mdContent={12}
-                        /> </Col><Col md="3">
-                        小时执行一次</Col>
+                          mdLabel="0"
+                        /></Col>
+                          -<Col md="3"><Field
+                            name="hourPeriodTo"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>
+                          小时
                     </Row>
-                  </Label>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="hourFromPer" name="hour" value="3"
+                      />
+                      <Label check className="form-check-label" htmlFor="hourFromPer">
+                        <Row><Col md="1">从</Col><Col md="3">
+                          <Field
+                            name="hourFrom"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>小时开始,每
+                      <Col md="3">
+                            <Field
+                              name="hourPer"
+                              component={InlineField}
+                              type="text"
+                              placeholder="0"
+                              mdLabel="0"
+                            /> </Col>
+                          小时执行一次
+                    </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="hourSpecial" name="hour" value="4"
+                      />
+                      <Label check className="form-check-label" htmlFor="hourSpecial">指定</Label>
+                    </FormGroup>
+                  </Col>
                 </FormGroup>
-                <FormGroup check className="radio">
-                  <Field className="form-check-input"
-                    component="input"
-                    type="radio"
-                    id="hourSpecial" name="hour" value="4"
-                  />
-                  <Label check className="form-check-label" htmlFor="hourSpecial">指定</Label>
+                <FormGroup row>
+                  <Col md="12">
+                    <Field name="hours" component={CheckboxGroup} options={hoursList} />
+                  </Col>
                 </FormGroup>
-              </Col>
-            </FormGroup>           
-            <FormGroup row>
-              <Col md="12">
-                <Field name="hours" component={CheckboxGroup} options={hoursList} />
-              </Col>
-            </FormGroup>
+              </TabPane>
+              <TabPane tabId="4">
+                <FormGroup row>
+                  <Col md="9">
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayCommon" name="day" value="1"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayCommon">日 允许的通配符[, - * / L W]</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayNotSpecial" name="day" value="2"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayNotSpecial">不指定</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayPeriod" name="day" value="3"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayPeriod">
+                        <Row><Col md="3">周期从 </Col><Col md="3"><Field
+                          name="dayPeriodFrom"
+                          component={InlineField}
+                          type="text"
+                          placeholder="0"
+                          mdLabel="0"
+                        /></Col>
+                          -<Col md="3"><Field
+                            name="dayPeriodTo"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>
+                          日
+                    </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayFromPer" name="day" value="4"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayFromPer">
+                        <Row><Col md="1">从</Col><Col md="3">
+                          <Field
+                            name="dayFrom"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>日开始,每
+                      <Col md="3">
+                            <Field
+                              name="dayPer"
+                              component={InlineField}
+                              type="text"
+                              placeholder="0"
+                              mdLabel="0"
+                            /> </Col>
+                          天执行一次
+                    </Row>
+                      </Label>
+                    </FormGroup>
+
+
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayWorking" name="day" value="5"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayWorking">
+                        <Row><Col md="2">每月</Col><Col md="3">
+                          <Field
+                            name="dayWorking"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>号最近的那个工作日
+                    </Row>
+                      </Label>
+                    </FormGroup>
+
+
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="dayLast" name="day" value="6"
+                      />
+                      <Label check className="form-check-label" htmlFor="dayLast">每月最后一天</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="daySpecial" name="day" value="7"
+                      />
+                      <Label check className="form-check-label" htmlFor="daySpecial">指定</Label>
+                    </FormGroup>
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Col md="12">
+                    <Field name="days" component={CheckboxGroup} options={daysList} />
+                  </Col>
+                </FormGroup>
+              </TabPane>
+              <TabPane tabId="5">
+                <FormGroup row>
+                  <Col md="9">
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="monthCommon" name="month" value="1"
+                      />
+                      <Label check className="form-check-label" htmlFor="monthCommon">月 允许的通配符[, - * /]</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="monthNotSpecial" name="month" value="2"
+                      />
+                      <Label check className="form-check-label" htmlFor="monthNotSpecial">不指定</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="monthPeriod" name="month" value="3"
+                      />
+                      <Label check className="form-check-label" htmlFor="monthPeriod">
+                        <Row><Col md="3">周期从 </Col><Col md="3"><Field
+                          name="monthPeriodFrom"
+                          component={InlineField}
+                          type="text"
+                          placeholder="0"
+                          mdLabel="0"
+                        /></Col>
+                          -<Col md="3"><Field
+                            name="monthPeriodTo"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>
+                          月
+                </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="monthFromPer" name="month" value="4"
+                      />
+                      <Label check className="form-check-label" htmlFor="monthFromPer">
+                        <Row><Col md="1">从</Col><Col md="3">
+                          <Field
+                            name="monthFrom"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>月开始,每
+                  <Col md="3">
+                            <Field
+                              name="monthPer"
+                              component={InlineField}
+                              type="text"
+                              placeholder="0"
+                              mdLabel="0"
+                            /> </Col>
+                          月执行一次
+                </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="monthSpecial" name="month" value="5"
+                      />
+                      <Label check className="form-check-label" htmlFor="monthSpecial">指定</Label>
+                    </FormGroup>
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Col md="12">
+                    <Field name="months" component={CheckboxGroup} options={monthsList} />
+                  </Col>
+                </FormGroup>
+              </TabPane>
+              <TabPane tabId="6">
+                <FormGroup row>
+                  <Col md="9">
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekCommon" name="week" value="1"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekCommon">周 允许的通配符[, - * / L #]</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekNotSpecial" name="week" value="2"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekNotSpecial">不指定</Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekPeriod" name="week" value="3"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekPeriod">
+                        <Row><Col md="3">周期从星期</Col><Col md="3"><Field
+                          name="weekPeriodFrom"
+                          component={InlineField}
+                          type="text"
+                          placeholder="0"
+                          mdLabel="0"
+                        /></Col>
+                          -<Col md="3"><Field
+                            name="weekPeriodTo"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>
+
+                        </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekFromPer" name="week" value="4"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekFromPer">
+                        <Row><Col md="1">第</Col><Col md="3">
+                          <Field
+                            name="weekFrom"
+                            component={InlineField}
+                            type="text"
+                            placeholder="0"
+                            mdLabel="0"
+                          /></Col>周的星期
+                  <Col md="3">
+                            <Field
+                              name="weekPer"
+                              component={InlineField}
+                              type="text"
+                              placeholder="0"
+                              mdLabel="0"
+                            /> </Col>
+
+                        </Row>
+                      </Label>
+                    </FormGroup>
+
+
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekLast" name="week" value="5"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekLast">
+                        <Row><Col md="8">本月最后一个星期
+                      </Col><Col>
+                            <Field
+                              name="monthLast"
+                              component={InlineField}
+                              type="text"
+                              placeholder="0"
+                              mdLabel="0"
+                            /> </Col>
+                        </Row>
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check className="radio">
+                      <Field className="form-check-input"
+                        component="input"
+                        type="radio"
+                        id="weekSpecial" name="week" value="6"
+                      />
+                      <Label check className="form-check-label" htmlFor="weekSpecial">指定</Label>
+                    </FormGroup>
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Col md="12">
+                    <Field name="weeks" component={CheckboxGroup} options={weeksList} />
+                  </Col>
+                </FormGroup>
               </TabPane>
             </TabContent>
           </Col>

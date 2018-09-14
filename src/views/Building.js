@@ -182,7 +182,8 @@ class Building extends Component {
     let buildings = this.props.buildings
 
     return (
-      <div className="animated fadeIn">
+      <div className="animated fadeIn" style={{top: '500px',
+        bottom: '0px'}}>
         <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditBuilding: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)

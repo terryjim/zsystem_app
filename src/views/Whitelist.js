@@ -65,7 +65,7 @@ class Whitelist extends Component {
           showResult={true} submit={(value) => this.submit(value)}
         /><br /><br />
         </Container>
-       <CronForm onSubmit={this.submit} />
+       {/* <CronForm onSubmit={this.submit} /> */}
       </div>
     )
   }

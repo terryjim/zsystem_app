@@ -52,7 +52,7 @@ class DefaultLayout extends Component {
             </AppSidebar>
             <main className="main">
               <AppBreadcrumb appRoutes={routes} />
-              <Container fluid>
+              <Container fluid >
                 <Switch>
                   {routes.map((route, idx) => {
                     return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
@@ -69,7 +69,7 @@ class DefaultLayout extends Component {
               <DefaultAside />
             </AppAside>
           </div>
-          <AppFooter>
+          <AppFooter fixed>
             <DefaultFooter />
           </AppFooter>
         </div>
