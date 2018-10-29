@@ -1,5 +1,5 @@
 //const defaultUrl = "/"
-const defaultUrl = "http://localhost:9000/"
+const defaultUrl = "http://192.168.10.153:9000/"
 //const defaultUrl = "http://118.31.72.47:9000/"
 const TParams = {
     defaultUrl: defaultUrl,
@@ -22,7 +22,8 @@ const TParams = {
         get_whitelist_list:defaultUrl+'whitelist/getSchedules',//获取白名单列表
         save_whitelist:defaultUrl+'whitelist/saveSchedule',//保存白名单cron
         enabledWhitelist:defaultUrl+'whitelist/enabledWhitelist',
+        updateAccessHardware:defaultUrl + 'accessHardware/updateVersion',//固件更新
     },
-    manufacturers: [{ 'id': 1, 'name': '平冶' }, { 'id': 2, 'name': '智果' }]
+    manufacturers: [{ 'id': 1, 'name': '平冶' }, { 'id': 2, 'name': '智果' },{'id':3,'name':'海康'}]
 }
 window.TParams = TParams

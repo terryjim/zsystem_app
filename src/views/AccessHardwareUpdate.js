@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditAccessHardwareForm from '../forms/EditAccessHardwareForm'
+import { updateAccessHardware } from '../actions/accessHardware'
+import { Badge, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import UpdateAccessHardwareForm from '../forms/UpdateAccessHardwareForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
-import 'react-table/react-table.css'
 import MyPagination from '../components/MyPagination'
+import 'react-table/react-table.css'
+
 const CheckboxTable = checkboxHOC(ReactTable);
-class AccessHardware extends Component {
+class AccessHardwareUpdate extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,13 +28,8 @@ class AccessHardware extends Component {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
-
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: false })
-    //确认删除记录操作    
-    if (nextProps.confirmDel) {
-      this.props.dispatch(delList(this.state.selection, 'accessHardware'))
-    }
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditAccessHardware: false })
   }
@@ -71,7 +68,7 @@ class AccessHardware extends Component {
       const currentRecords = wrappedInstance.getResolvedState().sortedData;
       // we just push all the IDs onto the selection array
       currentRecords.forEach(item => {
-        selection.push(item._original.id);
+        selection.push(item._original.hardwareCode);
       });
     }
     this.setState({ selectAll, selection });
@@ -87,9 +84,13 @@ class AccessHardware extends Component {
   };
   //切换编辑窗口状态（开、闭）
   toggleShowEditAccessHardware = () => {
-    this.setState({
-      showEditAccessHardware: !this.state.showEditAccessHardware,
-    });
+    if (!this.state.showEditAccessHardwar && this.state.selection.length === 0) {
+      alert("请选择要更新的设备！")
+    } else {
+      this.setState({
+        showEditAccessHardware: !this.state.showEditAccessHardware,
+      });
+    }
   }
   //切换查看窗口状态（开、闭）
   /*   toggleShowAccessHardware = () => {
@@ -104,11 +105,11 @@ class AccessHardware extends Component {
     });
   }
   submit = (values) => {
-    let category = values.category.reduce((num, item) => num | item)
-    /*   alert(JSON.stringify({...values,category}))
-     return */
-    this.props.dispatch(saveForm({...values,category}, 'accessHardware'))
-
+    let formData = new FormData()
+    formData.append('version', values.version)
+    formData.append('firmware', values.updateFile[0])
+    formData.append('devices', this.state.selection.join(','))
+    this.props.dispatch(updateAccessHardware(formData))
   }
   columns = [{
     accessor: 'id',
@@ -128,46 +129,24 @@ class AccessHardware extends Component {
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-pencil" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
+      <a className="fa fa-plug" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
-            this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditAccessHardware: true, edit: true })
+            this.setState({ selection: [c.row.hardwareCode] },()=> this.toggleShowEditAccessHardware())
+            //this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
+           
+            this.setState({ edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-remove" style={{ fontSize: 15, color: '#FF5722', alignItems: 'top' }}
-        onClick={
-          e => {
-            e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'accessHardware', 'del'))
-          }
-        }>
-      </a>
+
     </div>)
   }, {
-    accessor: 'name',
-    Header: '名称',
-
-  }, {
     id: 'category',
-    width: 240,
-    accessor: d => {
-      let ret = ''
-      if (d.category & 1)
-        ret = '蓝牙/'
-      if (d.category & 2)
-        ret += '二维码/'
-      if (d.category & 4)
-        ret += '人脸/'
-      if (ret.length > 0)
-        ret = ret.substr(ret, ret.length - 1)
-      return ret
-    }, Header: '硬件类型',
+    accessor: d => d.category === 1 ? '蓝牙' : d.category === 2 ? '二维码' : d.category === 3 ? '蓝牙及二维码' : '',
+    Header: '硬件类型',
   }, {
     accessor: 'hardwareCode',
     Header: '硬件编号',
@@ -184,24 +163,29 @@ class AccessHardware extends Component {
     accessor: 'hardwareKey',
     Header: '硬件密码',
 
-  }, {
-    id: 'manufacturer',
-    Header: '制造商',
-    //accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : '',
-    accessor: d => {
-      let manufacturers = window.TParams.manufacturers.find(x => x.id == d.manufacturer)
-      return manufacturers === undefined ? '' : manufacturers.name
-    }
-
-  }, {
-    accessor: 'shakeRssi',
-    Header: '摇一摇距离',
-
-  }, {
-    accessor: 'nearRssi',
-    Header: '靠近距离',
-
   },
+  {
+    accessor: 'manufacturer',
+    Header: '制造商',
+    Cell: ({ value }) => (value === "1" ? <Badge className="mr-1" color="success">平冶</Badge> : value === "2" ? <Badge className="mr-1" color="danger">智果</Badge> : ''),
+    // accessor:'status',
+    /*  sortMethod: (a, b) => {
+       return a.props.value > b.props.value ? 1 : -1;
+     } */
+    Filter: ({ filter, onChange }) =>
+      <select
+        onChange={event => onChange(event.target.value)}
+        value={filter ? filter.value : ""}
+      >
+        <option value="1">平冶</option>
+        <option value="2">智果</option>
+        <option value="">全部</option>
+      </select>,
+
+
+
+
+  }
   ];
 
   render() {
@@ -219,20 +203,19 @@ class AccessHardware extends Component {
     return (
       <div className="animated fadeIn" style={{ marginTop: '-15px' }}>
         <div style={{ marginBottom: '8px' }}>
-          <Button color="success" size="sm" onClick={() => {
-            this.props.dispatch(fillForm(null));
-            this.setState({ showEditAccessHardware: true, edit: true })
-          }}><i className="fa fa-file-o"></i>&nbsp;新增</Button>
-          {' '}<Button color="danger" size="sm" onClick={() => {
-            if (this.state.selection.length < 1)
-              alert('请选择要删除的记录！')
-            else
-              this.props.dispatch(showConfirm('是否删除选中记录？', 'accessHardware', 'del'));
-          }}><i className="fa fa-remove" ></i>&nbsp;删除</Button></div>
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={accessHardwares.content}
-          pages={accessHardwares.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
+          <Button color="success" size="sm"
+            onClick={() => {
+              this.props.dispatch(fillForm(null))
+              this.toggleShowEditAccessHardware()
+              this.setState({ edit: true })
+            }
+            }>
+            <i className="fa fa-file-o"></i>&nbsp;固件更新
+    </Button>
+        </div>
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='hardwareCode' data={accessHardwares.content}
+          pages={accessHardwares.totalPages} columns={this.columns} defaultPageSize={20} filterable
           className="-striped -highlight"
-          /* onPageChange={(pageIndex) => this.props.dispatch(getAccessHardware({page:pageIndex,size:10}))}  */
           total={accessHardwares.totalElements}
           PaginationComponent={MyPagination}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
@@ -269,41 +252,50 @@ class AccessHardware extends Component {
                 /*    if (v.id === 'address')
                      whereSql += ' and address=\'{\'p\':\''+ v.value + '\'}'
                    else */
-                whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+                if (v.id === 'manufacturer') {
+                  if (v.value !== '')
+                    whereSql += ' and manufacturer=' + v.value
+                } else
+                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
             )
-
+            state.sorted.forEach(
+              (v, index) => {
+                if (index === 0)
+                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
+                else
+                  whereSql += ' and ' + v.id + (v.desc ? " desc" : " asc")
+              }
+            )
             this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'accessHardware'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
-              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
+              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.hardwareCode)) {
                 style.background = '#4DBD74'
                 style.color = '#FFFFFF'
               }
               else
-                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.hardwareCode)) {
                   style.background = '#F86C6B'
                   style.color = '#FFFFFF'
                 } else
                   style = {}
+
               return {
-                style, onDoubleClick: (e, handleOriginal) => {
-                  this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditAccessHardware: true, edit: false })
-                },
+                style,
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    if (this.state.selection.includes(rowInfo.row.id))
-                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.id) })
+                    if (this.state.selection.includes(rowInfo.row.hardwareCode))
+                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.hardwareCode) })
                     else
-                      this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                      this.setState({ selection: [rowInfo.row.hardwareCode, ...this.state.selection] })
                   } else {
-                    if (this.state.selection.includes(rowInfo.row.id))
+                    if (this.state.selection.includes(rowInfo.row.hardwareCode))
                       this.setState({ selection: [] })
                     else
-                      this.setState({ selection: [rowInfo.row.id] })
+                      this.setState({ selection: [rowInfo.row.hardwareCode] })
                   }
                 }
               }
@@ -320,11 +312,11 @@ class AccessHardware extends Component {
               </div>
               <div className="card-block"> */}
 
-        <TopModal style={{ "maxWidth": "750px" }} isOpen={this.state.showEditAccessHardware} toggle={() => this.toggleShowEditAccessHardware()}
+        <TopModal isOpen={this.state.showEditAccessHardware} toggle={() => this.toggleShowEditAccessHardware()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditAccessHardware()}>门禁信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditAccessHardware()}>门禁设备固件更新</ModalHeader>
           <ModalBody>
-            <EditAccessHardwareForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditAccessHardware} />
+            <UpdateAccessHardwareForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditAccessHardware} />
           </ModalBody>
         </TopModal>
 
@@ -332,16 +324,15 @@ class AccessHardware extends Component {
     )
   }
 }
-//获取project记录集及修改记录ＩＤ数组
+
 const mapStateToProps = (state) => {
   let accessHardwares = state.cList
   let editedIds = state.editedIds
-  let confirmDel = state.confirm.module === 'accessHardware' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { closeModal: state.success.show, accessHardwares, editedIds, confirmDel }
+   return { closeModal: state.success.show, accessHardwares, editedIds}
 }
 
 
-AccessHardware = connect(
+AccessHardwareUpdate = connect(
   mapStateToProps
-)(AccessHardware)
-export default AccessHardware;
+)(AccessHardwareUpdate)
+export default AccessHardwareUpdate;

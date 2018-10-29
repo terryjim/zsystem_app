@@ -8,27 +8,14 @@ import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-import MyPagination from '../components/MyPagination'
+
 const CheckboxTable = checkboxHOC(ReactTable);
 class AccessHardware extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showEditAccessHardware: false,//显示修改表单
-      showDanger: false,   //显示错误信息     
-      selection: [],
-      edit: false,//是否为编辑状态
-      selectAll: false,
-      loading: true,
-    };
-  }
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
-
   componentWillReceiveProps(nextProps) {
-    this.setState({ loading: false })
     //确认删除记录操作    
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'accessHardware'))
@@ -36,7 +23,17 @@ class AccessHardware extends Component {
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditAccessHardware: false })
   }
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      showEditAccessHardware: false,//显示修改表单
+      showDanger: false,   //显示错误信息
+      /*    showAccessHardware: false,   */
+      selection: [],
+      edit: false,//是否为编辑状态
+      selectAll: false,
+    };
+  }
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -104,10 +101,8 @@ class AccessHardware extends Component {
     });
   }
   submit = (values) => {
-    let category = values.category.reduce((num, item) => num | item)
-    /*   alert(JSON.stringify({...values,category}))
-     return */
-    this.props.dispatch(saveForm({...values,category}, 'accessHardware'))
+    console.log(values)
+    this.props.dispatch(saveForm(values, 'accessHardware'))
 
   }
   columns = [{
@@ -116,30 +111,22 @@ class AccessHardware extends Component {
     show: false,
 
   }, {
-    id: 'index',
-    Header: '序号',
-    filterable: false,
-    width: 60,
-    Cell: props => (props.page * props.pageSize + props.viewIndex + 1),
-    sortable: false
-  }, {
     Header: '',
     sortable: false,
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-pencil" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
+      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditAccessHardware: true, edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-remove" style={{ fontSize: 15, color: '#FF5722', alignItems: 'top' }}
+      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             e.stopPropagation()
@@ -155,19 +142,8 @@ class AccessHardware extends Component {
 
   }, {
     id: 'category',
-    width: 240,
-    accessor: d => {
-      let ret = ''
-      if (d.category & 1)
-        ret = '蓝牙/'
-      if (d.category & 2)
-        ret += '二维码/'
-      if (d.category & 4)
-        ret += '人脸/'
-      if (ret.length > 0)
-        ret = ret.substr(ret, ret.length - 1)
-      return ret
-    }, Header: '硬件类型',
+    accessor: d => d.category === 1 ? '蓝牙' : d.category === 2 ? '二维码' : d.category === 3 ? '蓝牙及二维码' : '',
+    Header: '硬件类型',
   }, {
     accessor: 'hardwareCode',
     Header: '硬件编号',
@@ -187,11 +163,8 @@ class AccessHardware extends Component {
   }, {
     id: 'manufacturer',
     Header: '制造商',
-    //accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : '',
-    accessor: d => {
-      let manufacturers = window.TParams.manufacturers.find(x => x.id == d.manufacturer)
-      return manufacturers === undefined ? '' : manufacturers.name
-    }
+    accessor: d => d.manufacturer == 1 ? '平冶' : d.manufacturer == 2 ? '智果' : '',
+
 
   }, {
     accessor: 'shakeRssi',
@@ -217,51 +190,19 @@ class AccessHardware extends Component {
     let accessHardwares = this.props.accessHardwares
 
     return (
-      <div className="animated fadeIn" style={{ marginTop: '-15px' }}>
-        <div style={{ marginBottom: '8px' }}>
-          <Button color="success" size="sm" onClick={() => {
-            this.props.dispatch(fillForm(null));
-            this.setState({ showEditAccessHardware: true, edit: true })
-          }}><i className="fa fa-file-o"></i>&nbsp;新增</Button>
-          {' '}<Button color="danger" size="sm" onClick={() => {
-            if (this.state.selection.length < 1)
-              alert('请选择要删除的记录！')
-            else
-              this.props.dispatch(showConfirm('是否删除选中记录？', 'accessHardware', 'del'));
-          }}><i className="fa fa-remove" ></i>&nbsp;删除</Button></div>
+      <div className="animated fadeIn">
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditAccessHardware: true, edit: true }) }}>新增</Button>
+        <Button color="danger" size="sm" onClick={() => {
+          if (this.state.selection.length < 1)
+            alert('请选择要删除的记录！')
+          else
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'accessHardware', 'del'));
+        }}>删除</Button>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={accessHardwares.content}
-          pages={accessHardwares.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
+          pages={accessHardwares.totalPages} columns={this.columns} defaultPageSize={10} filterable
           className="-striped -highlight"
           /* onPageChange={(pageIndex) => this.props.dispatch(getAccessHardware({page:pageIndex,size:10}))}  */
-          total={accessHardwares.totalElements}
-          PaginationComponent={MyPagination}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-          loading={this.state.loading}
-          style={{
-            height: document.body.clientHeight - 210 // This will force the table body to overflow and scroll, since there is not enough room
-            , backgroundColor: '#FFFFFF'
-          }}
-          getTheadProps={() => {
-            return {
-              style: {
-                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
-              }
-            };
-          }}
-          getTheadThProps={() => {
-            return {
-              style: {
-                marginTop: '5px'
-              }
-            };
-          }}
-          getTdProps={(state, rowInfo, column) => {
-            return {
-              style: {
-                textAlign: "center"
-              }
-            };
-          }}
           onFetchData={(state, instance) => {
             let whereSql = ''
             state.filtered.forEach(
@@ -278,16 +219,12 @@ class AccessHardware extends Component {
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
-              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
-                style.background = '#4DBD74'
-                style.color = '#FFFFFF'
+              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                style.background = '#c8e6c9';
               }
-              else
-                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
-                  style.background = '#F86C6B'
-                  style.color = '#FFFFFF'
-                } else
-                  style = {}
+              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
+                style.background = '#62c2de';
+              }
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
@@ -295,10 +232,7 @@ class AccessHardware extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    if (this.state.selection.includes(rowInfo.row.id))
-                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.id) })
-                    else
-                      this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })
@@ -320,7 +254,7 @@ class AccessHardware extends Component {
               </div>
               <div className="card-block"> */}
 
-        <TopModal style={{ "maxWidth": "750px" }} isOpen={this.state.showEditAccessHardware} toggle={() => this.toggleShowEditAccessHardware()}
+        <TopModal isOpen={this.state.showEditAccessHardware} toggle={() => this.toggleShowEditAccessHardware()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditAccessHardware()}>门禁信息</ModalHeader>
           <ModalBody>

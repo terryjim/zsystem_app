@@ -42,7 +42,10 @@ const ParkingLot= Loadable({
   loader: () => import('./views/ParkingLot'),
   loading: Loading,
 })
-
+const AccessHardwareUpdate=Loadable({
+  loader: () => import('./views/AccessHardwareUpdate'),
+  loading: Loading,
+})
 
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
@@ -222,7 +225,8 @@ const routes = [
   { path: '/property/setting', name: '物业公司设置', component: Property },
   { path: '/property/department', name: '项目部设置', component: Department },
   { path: '/property/allot', name: '物业楼盘分配', component: DepartmentAndBuildings }, 
-  { path: '/accessControl/setting', name: '硬件参数设置', component: AccessHardware }, 
+  { path: '/accessControl/setting', name: '硬件参数设置', component: AccessHardware },
+  { path: '/accessControl/AccessHardwareUpdate', name: '硬件设备更新', component: AccessHardwareUpdate },
   { path: '/accessControl/allot', name: '门禁分配', component: AccessControl }, 
   { path: '/accessControl/whitelist', name: '白名单设置', component: Whitelist }, 
   { path: '/parkingLot/setting', name: '停车场设置', component: ParkingLot }, 

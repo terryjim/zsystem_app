@@ -6,7 +6,7 @@ import { Badge, Label,Row, Container, Col, Button, Nav,NavItem, TabPane, TabCont
 import classnames from 'classnames'
 import CronBuilder from 'react-cron-builder'
 import 'react-cron-builder/dist/bundle.css'
-import {CheckboxGroup} from '../components/field'
+import {CheckboxGroup} from '../components/Field'
 import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import CronForm from '../forms/CronForm'
 class Whitelist extends Component {
@@ -38,7 +38,7 @@ class Whitelist extends Component {
 
   submit = (values) => {
     console.log(values)
-    //this.props.dispatch(saveForm(values, 'whitelist'))
+    this.props.dispatch(saveForm(values, 'whitelist'))
     // this.setState({ showEditProject: false })
   }
 

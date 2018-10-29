@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import { getBuildingsByProject, getPublicAreaByBuilding, getUnitByBuilding } from '../actions/building'
 import { getPublicAreaByProject } from '../actions/project'
-import { InputField, InlineField } from '../components/field'
+import { InputField, InlineField } from '../components/Field'
 import AccessControl from '../views/AccessControl';
 import SelectAccessHardware from '../views/SelectAccessHardware';
 

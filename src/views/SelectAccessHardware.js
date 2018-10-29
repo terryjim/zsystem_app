@@ -150,13 +150,15 @@ class SelectAccessHardware extends Component {
               ret = ret | v.value
             else {
               if (index == 0)
-                ret = ret & 14
+                ret = ret & 30
               if (index == 1)
-                ret = ret & 13
+                ret = ret & 29
               if (index == 2)
-                ret = ret & 11
+                ret = ret & 27
               if (index == 3)
-                ret = ret & 7
+                ret = ret & 23
+              if (index == 4)
+                ret = ret & 15
             }
           })        
           data[cellInfo.index][cellInfo.column.id] = ret        
@@ -166,7 +168,8 @@ class SelectAccessHardware extends Component {
         <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="2" checked={this.state.data[cellInfo.index][cellInfo.column.id]&2?'checked':''}/>二维码 </label>{' '}
         <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="4" checked={this.state.data[cellInfo.index][cellInfo.column.id]&4?'checked':''} />远程 </label>{' '}
         <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="8" checked={this.state.data[cellInfo.index][cellInfo.column.id]&8?'checked':''}/>ID卡 </label>
-      </div>
+        <label><input name={'allowed_control_' + cellInfo.index} type="checkbox" value="16" checked={this.state.data[cellInfo.index][cellInfo.column.id]&16?'checked':''}/>人脸</label>
+       </div>
     );
   }
 

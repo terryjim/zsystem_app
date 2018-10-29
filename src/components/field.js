@@ -18,13 +18,13 @@ import {
                   id={`${input.name}[${index}]`}
                              name={`${input.name}[${index}]`}
                              value={option.value}
-                             checked={input.value.indexOf(option.name) !== -1}
+                             checked={input.value!==undefined&&input.value.indexOf(option.value) !== -1}
                              onChange={(event) => {
                                  const newValue = [...input.value];
                                  if (event.target.checked) {
-                                     newValue.push(option.name);
+                                     newValue.push(option.value);
                                  } else {
-                                     newValue.splice(newValue.indexOf(option.name), 1);
+                                     newValue.splice(newValue.indexOf(option.value), 1);
                                  }  
                                  return input.onChange(newValue);
                              }}/>
@@ -115,15 +115,15 @@ export const InlineSelectField = ({ mdLabel = 2, mdContent = 12 - mdLabel, name,
     </Col>
   </FormGroup>
 )
-export const SelectField = ({ readOnly, input, type,label,options, meta: { touched, error } }) => (
+export const SelectField = ({ readOnly, input, type, label, options, meta: { touched, error } }) => (
   <Col xs="12">
     <FormGroup>
-      <Label hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
-      <Input type="select" invalid={touched && error ? true : false} valid={touched && !error ? true : false}  placeholder={label} {...input} readOnly={readOnly}>
-     {
-       options.map(option=>(<option >{option.text}</option>))
-     }
-     </Input>
+      <Label hidden={type === 'hidden' ? true : false || label === undefined || label === null} htmlFor="{label}">{label}</Label>
+      <Input type="select" invalid={touched && error ? true : false} valid={touched && !error ? true : false} placeholder={label} {...input} readOnly={readOnly}>
+        {
+          options.map(option => (<option >{option.text}</option>))
+        }
+      </Input>
       {touched && error && <FormFeedback>{error}</FormFeedback>}
     </FormGroup>
   </Col>

@@ -3,7 +3,7 @@ import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import { Badge, Label, Row, Container, Col, Button, Nav, NavItem, TabPane, TabContent, NavLink, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField, CheckboxGroup, InlineField, InlineSelectField, FieldValidate } from '../components/field'
+import { InputField, CheckboxGroup, InlineField, InlineSelectField, FieldValidate } from '../components/Field'
 import classnames from 'classnames'
 
 const validate = values => {

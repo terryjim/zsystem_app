@@ -82,6 +82,12 @@ export default {
       icon: 'icon-settings',
     },
     {
+      name: '硬件设备更新',
+      url: '/accessControl/AccessHardwareUpdate',
+      icon: 'icon-settings',
+    },
+    
+    {
       name: '门禁分配设置',
       url: '/accessControl/allot',
       icon: 'icon-location-pin',

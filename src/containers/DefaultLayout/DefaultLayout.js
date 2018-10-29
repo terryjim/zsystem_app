@@ -31,6 +31,7 @@ import { withRouter } from 'react-router-dom';
 import SuccessModal from '../../components/SuccessModal'
 import ErrModal from '../../components/ErrModal'
 import ConfirmModal from '../../components/ConfirmModal'
+import LoadingModal from '../../components/LoadingModal'
 class DefaultLayout extends Component {
   render() {    
     if (window.sessionStorage.accessToken == null || window.sessionStorage.accessToken == undefined || window.sessionStorage.accessToken === '') {
@@ -41,7 +42,7 @@ class DefaultLayout extends Component {
           <AppHeader fixed>
             <DefaultHeader />
           </AppHeader>
-          <ErrModal/><SuccessModal/><ConfirmModal/>
+          <ErrModal/><SuccessModal/><ConfirmModal/><LoadingModal/>
           <div className="app-body">
             <AppSidebar fixed display="lg">
               <AppSidebarHeader />

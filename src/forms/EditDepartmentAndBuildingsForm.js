@@ -3,7 +3,7 @@ import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField } from '../components/field'
+import { InputField } from '../components/Field'
 import BuildingsAllotTable from '../components/BuildingsAllotTable.js'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
