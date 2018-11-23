@@ -58,7 +58,7 @@ class SelectAccessHardware extends Component {
     let selHardwares = new Array()
     data.map(d => {
       if (this.state.selection.indexOf(d.id) > -1) {
-        selHardwares.push({ id: d.id, name: d.name, entranceDirection: d.entranceDirection, entranceType: d.entranceType,allowedControl:d.allowedControl })
+        selHardwares.push({ id: d.id, manufacturer:d.manufacturer,hardwareCode:d.hardwareCode,name: d.name, entranceDirection: d.entranceDirection, entranceType: d.entranceType,allowedControl:d.allowedControl })
 
       }
     })
